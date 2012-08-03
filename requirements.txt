@@ -11,6 +11,7 @@ simplejson==2.5.2
 pytz==2012c
 
 celery==3.0.5
+redis==2.6.0
 
 # logging
 raven==1.7.5

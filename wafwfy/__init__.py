@@ -31,9 +31,16 @@ if app.testing and 'SQLALCHEMY_DATABASE_URI_TEST' in app.config:
     app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI_TEST']
 
 
+# set up the database
 from wafwfy.database import db
-
 db.app = app
 db.init_app(app)
 
+# set up celery
+from celery import Celery
+celery_instance = Celery('wafwfy')
+celery_instance.conf.add_defaults(app.config)
+import wafwfy.tasks
+
+# set up views
 import wafwfy.views

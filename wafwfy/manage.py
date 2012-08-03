@@ -21,6 +21,13 @@ def drop_db():
     drop_all()
 
 
+@manager.command
+def celery():
+    import os
+#    os.system('celery -A wafwfy.celery_instance beat --loglevel=info')
+    os.system('celery -A wafwfy.celery_instance worker -B --loglevel=info')
+
+
 manager.add_command('runserver',  Server(port=7998))
 
 
