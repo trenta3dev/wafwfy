@@ -1,4 +1,6 @@
 *.py[co]
+.idea
+settings_local.py
 
 # Packages
 *.egg
