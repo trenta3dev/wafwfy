@@ -10,6 +10,8 @@ psycopg2==2.4.5
 simplejson==2.5.2
 pytz==2012c
 
+celery==3.0.5
+
 # logging
 raven==1.7.5
 blinker==1.2

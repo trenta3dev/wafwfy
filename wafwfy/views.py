@@ -1,3 +1,4 @@
+from flask.templating import render_template
 from wafwfy import app
 
 
@@ -9,4 +10,4 @@ logger.setLevel(logging.INFO)
 
 @app.route('/')
 def index():
-    return '<h1>yay!</h1>'
+    return render_template('index.html')
