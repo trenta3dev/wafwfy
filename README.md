@@ -7,8 +7,10 @@ we are "fortunately" working for you - a pivotaltracker monitor/dashboard to sho
 howto
 -----
 
-Run the server with
+Run the server with (it will be available at http://localhost:7998 ):
+     
     python wafwfy/manage.py runserver
 
-Then run celery with
+then run celery with:
+     
     python wafwfy/manage.py celery
