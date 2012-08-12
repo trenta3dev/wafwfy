@@ -3,7 +3,7 @@ helper classes and methods
 """
 import requests
 
-from wafwfy import app, redis
+from wafwfy import app
 
 
 class MissingPivotalConfigurationError(Exception):
@@ -47,7 +47,7 @@ class PivotalRequest(object):
             name=find('name').text,
             story_type=find('story_type').text,
             current_state=find('current_state').text,
-            )
+        )
 
         try:
             story['estimate'] = int(find('estimate').text)
