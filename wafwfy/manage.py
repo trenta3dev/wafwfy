@@ -16,6 +16,13 @@ def celery():
     os.system('celery -A wafwfy.celery_instance worker -B --loglevel=info')
 
 
+@manager.command
+def fetch_stories():
+    from wafwfy.tasks import fetch_stories
+
+    fetch_stories()
+
+
 manager.add_command('runserver',  Server(port=7998))
 
 

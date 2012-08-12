@@ -36,7 +36,38 @@ class PivotalRequest(object):
 
         return response.content
 
-    def get_all_stories(self):
+    @staticmethod
+    def story_element_to_dict(story_el):
+        """
+        Extract a dictionary representing a story from an ElementTree element.
+        """
+        find = story_el.find
+        story = dict(
+            id=find('id').text,
+            name=find('name').text,
+            story_type=find('story_type').text,
+            current_state=find('current_state').text,
+            )
+
+        try:
+            story['estimate'] = int(find('estimate').text)
+        except AttributeError:
+            pass
+
+        try:
+            story['labels'] = find('labels').text.split(',')
+        except AttributeError:
+            print story_el, list(story_el)
+            pass
+
+        try:
+            story['owned_by'] = find('owned_by').text
+        except AttributeError:
+            pass
+
+        return story
+
+    def iter_stories(self):
         from xml.etree import ElementTree as etree
 
         content = self.get(self.project_root + "stories")
@@ -44,28 +75,6 @@ class PivotalRequest(object):
         root = etree.fromstring(content)
 
         for story_el in root.findall('story'):
-            find = story_el.find
-            story = dict(
-                id=find('id').text,
-                name=find('name').text,
-                story_type=find('story_type').text,
-                current_state=find('current_state').text,
-            )
-
-            try:
-                story['estimate'] = int(find('estimate').text)
-            except AttributeError:
-                pass
-
-            try:
-                story['labels'] = find('labels').text.split(',')
-            except AttributeError:
-                print story_el, list(story_el)
-                pass
-
-            try:
-                story['owned_by'] = find('owned_by').text
-            except AttributeError:
-                pass
+            story = self.story_element_to_dict(story_el)
 
             yield story
