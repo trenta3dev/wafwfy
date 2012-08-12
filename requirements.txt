@@ -1,4 +1,4 @@
-Flask==0.8
+Flask==0.9
 Flask-SQLAlchemy==0.16
 Flask-Script==0.3.3
 
@@ -7,12 +7,23 @@ SQLAlchemy==0.7.8
 Werkzeug==0.8.3
 psycopg2==2.4.5
 
-simplejson==2.5.2
-pytz==2012c
+simplejson==2.6.1
+pytz==2012d
 
 celery==3.0.5
+amqplib==1.0.2
+anyjson==0.3.3
+argparse==1.2.1
+billiard==2.7.3.12
+kombu==2.3.2
+python-dateutil==1.5
+
 redis==2.6.0
 
 # logging
 raven==1.7.5
 blinker==1.2
+
+Flask-And-Redis==0.3.1
+
+requests==0.13.6
