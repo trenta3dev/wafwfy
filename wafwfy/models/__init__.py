@@ -47,5 +47,5 @@ class Story(object):
 
         for id_ in ids:
             yield redis.hgetall(
-                app.config['REDIS_STORY_KEY'].format(story=id_)
+                app.config['REDIS_STORY_KEY'].format(story_id=id_)
             )

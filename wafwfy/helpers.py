@@ -27,6 +27,8 @@ class PivotalRequest(object):
         )
 
     def get(self, url):
+#        return open('stories').read()
+
         response = requests.get(
             url,
             headers={
