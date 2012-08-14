@@ -34,15 +34,6 @@ if not app.debug and not app.testing:
     )
 
 
-if app.testing and 'SQLALCHEMY_DATABASE_URI_TEST' in app.config:
-    app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI_TEST']
-
-
-# set up the database
-from wafwfy.database import db
-db.app = app
-db.init_app(app)
-
 # redis
 from flask.ext.redis import Redis
 
