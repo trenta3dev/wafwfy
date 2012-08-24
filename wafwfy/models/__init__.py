@@ -1,4 +1,5 @@
-""" a couple of models
+"""
+A couple of models
 """
 from wafwfy import redis, app
 
@@ -30,6 +31,22 @@ class Story(object):
             pipe.execute()
 
     @classmethod
+    def get(cls, id_):
+        story = redis.hgetall(
+            app.config['REDIS_STORY_KEY'].format(story_id=id_)
+        )
+        story['id'] = id_
+
+        return story
+
+    @classmethod
+    def all(cls):
+        ids = redis.smembers(app.config['REDIS_STORIES_KEY'])
+
+        for id_ in ids:
+            yield cls.get(id_)
+
+    @classmethod
     def count_icebox(cls):
         return redis.scard(
             app.config['REDIS_STORIES_STATE_KEY'].format(
@@ -46,6 +63,4 @@ class Story(object):
         )
 
         for id_ in ids:
-            yield redis.hgetall(
-                app.config['REDIS_STORY_KEY'].format(story_id=id_)
-            )
+            yield cls.get(id_)
