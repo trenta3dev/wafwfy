@@ -1,5 +1,5 @@
 $(function () {
-  Story = Backbone.Model.extend({
+  var Story = Backbone.Model.extend({
     defaults: {
       "story_type": "",
       "name": "",
@@ -21,9 +21,14 @@ $(function () {
 
   var StoryView = Backbone.View.extend({
     template: _.template($('#story-item').html()),
+    render: function () {
+      $(this.el).html(this.template(this.model.toJSON()));
+      return this;
+    }
   });
 
   var StoryListView = Backbone.View.extend({
+    el: $("body"),
     initialize: function () {
       var self = this;
       this.model = new StoryList();
@@ -32,9 +37,9 @@ $(function () {
       }});
     },
     render: function () {
-      console.log(this.model)
+      var $el = $(this.el);
       _.each(this.model.models, function (story) {
-        $('body').append(new StoryView({model: story}).render().el);
+        $el.append(new StoryView({model: story}).render().el);
       }, this);
     }
 
