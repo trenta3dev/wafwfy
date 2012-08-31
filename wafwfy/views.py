@@ -42,8 +42,9 @@ def tags_count():
     from collections import defaultdict
 
     stories = Story.all()
-    tags = defaultdict(lambda: 0)
+    tags = defaultdict(lambda:defaultdict(lambda: 0))
     for story in stories:
+        print story
         for label in story.get('labels', []):
-            tags[label] += 1
+            tags[label][story['current_state']] += 1
     return jsonify(objects=tags)
