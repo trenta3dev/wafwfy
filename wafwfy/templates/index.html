@@ -7,12 +7,15 @@
 	<!--<script src="/static/js/jquery.min.js"></script>-->
 	<script src="/static/js/underscore-min.js"></script>
 	<script src="/static/js/backbone-min.js"></script>
+	<script src="/static/js/jquery.gridster.js"></script>
 	<script src="/static/js/wafwfy.js"></script>
 	<script src="/static/js/highcharts.js"></script>
 
     <script id="story-item" type="text/template">
         <td class="<%= current_state %>"><%= name %></td>
     </script>
+
+    <link href="/static/css/jquery.gridster.css" rel="stylesheet" />
 
     <style type="text/css">
         button.off {
@@ -44,23 +47,49 @@ We are "fortunately" working for you
     <script type="text/javascript">
         var epics = [{% for epic in epics %} {% if loop.index > 1 %},{% endif %} '{{ epic }}' {% endfor %}];
     </script>
-    <div id="tags-chart" style="width: 400px; height: 300px; margin: 0 auto; float:right;"></div>
+    <div class="gridster">
+        <ul>
+            <li data-row="1" data-col="1" data-sizex="3" data-sizey="2">
+                <div id="tags-chart" style="width: 400px; height: 300px; margin: 0 auto; float:right;"></div>
+
+            </li>
+            <li data-row="2" data-col="1" data-sizex="1" data-sizey="1">Velocity:<strong style="display:block">18</strong></li>
+            <li data-row="2" data-col="1" data-sizex="1" data-sizey="1"></li>
+            <li data-row="2" data-col="1" data-sizex="1" data-sizey="1"></li>
+            <li data-row="3" data-col="1" data-sizex="2" data-sizey="1">Last git commit:
+            <dl>
+                <dt>add highcharts and first dummy epics chart</dt>
+                <dt>add current state info for each story grouped by tag in /api/tags-count/</dt>
+            </dl></li>
+        </ul>
+    </div>
 
 
-    <table id="story-table" class="table-striped">
-    <thead>
-    <tr>
-        <td>
-            <button class="story-switch unscheduled on" data-type="unscheduled">unscheduled</button>
-            <button class="story-switch accepted on" data-type="accepted">accepted</button>
-            <button class="story-switch unstarted on" data-type="unstarted">unstarted</button>
-            <button class="story-switch delivered on" data-type="delivered">delivered</button>
-            <button class="story-switch started on" data-type="started">started</button>
-            <button class="story-switch finished on" data-type="finished">finished</button>
-        </td>
-    </tr>
-    </thead>
+    <!--<table id="story-table" class="table-striped">-->
+    <!--<thead>-->
+    <!--<tr>-->
+        <!--<td>-->
+            <!--<button class="story-switch unscheduled on" data-type="unscheduled">unscheduled</button>-->
+            <!--<button class="story-switch accepted on" data-type="accepted">accepted</button>-->
+            <!--<button class="story-switch unstarted on" data-type="unstarted">unstarted</button>-->
+            <!--<button class="story-switch delivered on" data-type="delivered">delivered</button>-->
+            <!--<button class="story-switch started on" data-type="started">started</button>-->
+            <!--<button class="story-switch finished on" data-type="finished">finished</button>-->
+        <!--</td>-->
+    <!--</tr>-->
+    <!--</thead>-->
 
-    </table>
+    <!--</table>-->
+
+    <script type="text/javascript">
+        $(function(){ //DOM Ready
+
+            $(".gridster ul").gridster({
+                widget_margins: [10, 10],
+                widget_base_dimensions: [140, 140]
+            });
+
+        });
+    </script>
 </body>
 </html>
