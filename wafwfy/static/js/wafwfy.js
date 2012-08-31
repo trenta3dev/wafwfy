@@ -15,17 +15,24 @@ $(function () {
   var StoryList = Backbone.Collection.extend({
     model: Story,
     url: "/api/story/",
+    allStates: ['unscheduled','accepted','unstarted','delivered','started', 'finished'],
     parse: function (json) {
       return json.objects;
     },
-    getAcceptedStory: function() {
-      return this.where({current_state: "accepted"})
+
+    getStoryByType: function(type) {
+      return this.where({current_state: type})
     },
+
     filterByState: function(type){
-      var filteredStories = this.where({current_state: type});
+      var filteredStories = this.getStoryByType(type);
       _.each(filteredStories, function(story){
         story.attributes.show = !story.attributes.show;
       });
+    },
+
+    getCountByState: function(type){
+      return this.getStoryByType(type).length;
     }
   });
 
@@ -37,26 +44,6 @@ $(function () {
 
       $(this.el).html(this.template(this.model.toJSON()));
 
-      switch(model_json.current_state){
-        case 'unscheduled':
-          $(this.el).css('color','DodgerBlue');
-          break;
-        case 'accepted':
-          $(this.el).css('color', 'LimeGreen');
-          break;
-        case 'unstarted':
-          $(this.el).css('color', 'LightCoral');
-          break;
-        case 'delivered':
-          $(this.el).css('color', 'Orange');
-          break;
-        case 'started':
-          $(this.el).css('color', 'MediumVioletRed');
-          break;
-        case 'finished':
-          $(this.el).css('color', 'Peru');
-          break;
-      }
       if(!model_json.show)
         $(this.el).hide();
       return this;
@@ -90,10 +77,15 @@ $(function () {
 
     render: function () {
       var $el = $(this.el);
+      _.each(this.stories.allStates, function(state){
+          $('button.'+state).html(state + ' - ' + this.stories.getCountByState(state));
+      }, this);
+
       $el.find('tbody').html('');
       _.each(this.stories.models, function (story) {
         $el.append(new StoryView({model: story}).render().el);
       }, this);
+
     }
 
   });

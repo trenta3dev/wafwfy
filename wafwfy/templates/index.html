@@ -10,11 +10,30 @@
 	<script src="/static/js/wafwfy.js"></script>
 
     <script id="story-item" type="text/template">
-        <td><%= name %></td>
+        <td class="<%= current_state %>"><%= name %></td>
     </script>
+
     <style type="text/css">
         button.off {
             opacity: 0.5;
+        }
+        td.unscheduled, button.unscheduled {
+            color: DodgerBlue;
+        }
+        td.accepted, button.accepted  {
+            color: LimeGreen;
+        }
+        td.unstarted, button.unstarted {
+            color: LightCoral;
+        }
+        td.delivered, button.delivered {
+            color: Orange;
+        }
+        td.started, button.started {
+            color: MediumVioletRed;
+        }
+        td.finished, button.finished {
+            color: Peru;
         }
     </style>
 </head>
@@ -23,20 +42,20 @@
 We are "fortunately" working for you
 
 
-<table id="story-table" class="table-striped">
-<thead>
-<tr>
-    <td>
-        <button class="story-switch on" data-type="unscheduled" style="color:DodgerBlue">unscheduled</button>
-        <button class="story-switch on" data-type="accepted" style="color:LimeGreen">accepted</button>
-        <button class="story-switch on" data-type="unstarted" style="color:LightCoral">unstarted</button>
-        <button class="story-switch on" data-type="delivered" style="color:Orange">delivered</button>
-        <button class="story-switch on" data-type="started" style="color:MediumVioletRed">started</button>
-        <button class="story-switch on" data-type="finished" style="color:Peru">finished</button>
-    </td>
-</tr>
-</thead>
+    <table id="story-table" class="table-striped">
+    <thead>
+    <tr>
+        <td>
+            <button class="story-switch unscheduled on" data-type="unscheduled">unscheduled</button>
+            <button class="story-switch accepted on" data-type="accepted">accepted</button>
+            <button class="story-switch unstarted on" data-type="unstarted">unstarted</button>
+            <button class="story-switch delivered on" data-type="delivered">delivered</button>
+            <button class="story-switch started on" data-type="started">started</button>
+            <button class="story-switch finished on" data-type="finished">finished</button>
+        </td>
+    </tr>
+    </thead>
 
-</table>
+    </table>
 </body>
 </html>
