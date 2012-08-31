@@ -1,6 +1,7 @@
 """
 A couple of models
 """
+from flask import json
 from wafwfy import redis, app
 
 
@@ -18,7 +19,7 @@ class Story(object):
         del d_story['id']
 
         pipe.delete(story_key)
-        pipe.hmset(story_key, d_story)
+        pipe.set(story_key, json.dumps(d_story))
         pipe.sadd(app.config['REDIS_STORIES_KEY'], story_id)
         pipe.sadd(
             app.config['REDIS_STORIES_STATE_KEY'].format(
@@ -32,9 +33,10 @@ class Story(object):
 
     @classmethod
     def get(cls, id_):
-        story = redis.hgetall(
+        story_s = redis.get(
             app.config['REDIS_STORY_KEY'].format(story_id=id_)
         )
+        story = json.loads(story_s)
         story['id'] = id_
 
         return story
