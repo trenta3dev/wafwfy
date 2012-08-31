@@ -8,11 +8,19 @@
 	<script src="/static/js/underscore-min.js"></script>
 	<script src="/static/js/backbone-min.js"></script>
 	<script src="/static/js/jquery.gridster.js"></script>
+
 	<script src="/static/js/wafwfy.js"></script>
 	<script src="/static/js/highcharts.js"></script>
 
     <script id="story-item" type="text/template">
         <td class="<%= current_state %>"><%= name %></td>
+    </script>
+
+    <script id="single-box" type="text/template">
+        <li data-row="<%= data-row %>" data-col="<%= data-col %>"
+            data-sizex="<%= data-sizex %>" data-sizey="<%= data-sizey %>">
+            <%= content %>
+        </li>
     </script>
 
     <link href="/static/css/jquery.gridster.css" rel="stylesheet" />
@@ -81,15 +89,14 @@ We are "fortunately" working for you
 
     <!--</table>-->
 
-    <script type="text/javascript">
-        $(function(){ //DOM Ready
+    <!--<script type="text/javascript">-->
+        <!--$(function(){ //DOM Ready-->
+            <!--$(".gridster ul").gridster({-->
+                <!--widget_margins: [10, 10],-->
+                <!--widget_base_dimensions: [140, 140]-->
+            <!--});-->
 
-            $(".gridster ul").gridster({
-                widget_margins: [10, 10],
-                widget_base_dimensions: [140, 140]
-            });
-
-        });
-    </script>
+        <!--});-->
+    <!--</script>-->
 </body>
 </html>

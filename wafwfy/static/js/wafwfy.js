@@ -87,17 +87,51 @@ $(function () {
       }, this);
 
     }
-
   });
 
-  window.storyList = new StoryListView;
+
+  // generic widget, extend this and customize render
+  // with right model
+  var GenericWidget = Backbone.View.extend({
+    tagName: 'li',
+    sizeX: 1,
+    sizeY: 1,
+    row: 1,
+    col: 1
+  });
+
+  var EpicsWidget = GenericWidget.extend({
+    render: function(){
+      $(this.el).html('Epics');
+      return this;
+    }
+  });
+
+  var WafwfyApp = Backbone.View.extend({
+    el: $(".gridster ul"),
+    widgets: [
+      EpicsWidget
+    ],
+    gridster: null,
+    initialize: function(){
+      this.gridster = $(this.el).gridster({
+        widget_margins: [10, 10],
+        widget_base_dimensions: [140, 140]
+      }).data('gridster');
+      this.render();
+    },
+    render: function(){
+      _.each(this.widgets, function(Widget){
+        var widget = new Widget();
+        this.gridster.add_widget(widget.render().el,
+                                  widget.sizeX, widget.sizeY);
+      }, this)
+    }
+  });
+
+  window.wafwfyApp = new WafwfyApp;
+//  window.storyList = new StoryListView;
 });
-
-
-
-
-
-
 
 
 $(function () {
