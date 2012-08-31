@@ -8,6 +8,7 @@
 	<script src="/static/js/underscore-min.js"></script>
 	<script src="/static/js/backbone-min.js"></script>
 	<script src="/static/js/wafwfy.js"></script>
+	<script src="/static/js/highcharts.js"></script>
 
     <script id="story-item" type="text/template">
         <td class="<%= current_state %>"><%= name %></td>
@@ -40,6 +41,10 @@
 <body>
 <h1>wafwfy</h1>
 We are "fortunately" working for you
+    <script type="text/javascript">
+        var epics = [{% for epic in epics %} {% if loop.index > 1 %},{% endif %} '{{ epic }}' {% endfor %}];
+    </script>
+    <div id="tags-chart" style="width: 400px; height: 300px; margin: 0 auto; float:right;"></div>
 
 
     <table id="story-table" class="table-striped">

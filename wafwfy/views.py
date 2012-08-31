@@ -1,7 +1,6 @@
 import logging
 
 from flask import render_template, jsonify
-from flask.globals import request
 from wafwfy import app
 
 
@@ -12,7 +11,9 @@ logger.setLevel(logging.INFO)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html',
+        epics=['one', 'two']
+    )
 
 
 @app.route('/api/story/')
@@ -44,7 +45,6 @@ def tags_count():
     stories = Story.all()
     tags = defaultdict(lambda:defaultdict(lambda: 0))
     for story in stories:
-        print story
         for label in story.get('labels', []):
             tags[label][story['current_state']] += 1
     return jsonify(objects=tags)

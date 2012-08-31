@@ -92,3 +92,70 @@ $(function () {
 
   window.storyList = new StoryListView;
 });
+
+
+
+
+
+
+
+
+$(function () {
+
+  var chart;
+  $(document).ready(function() {
+      chart = new Highcharts.Chart({
+          chart: {
+              renderTo: 'tags-chart',
+              type: 'bar'
+          },
+          title: {
+              text: 'Epics'
+          },
+          xAxis: {
+//              categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
+              categories: epics
+          },
+          yAxis: {
+              min: 0
+          },
+          legend: {
+            enabled: false
+          },
+          tooltip: {
+              formatter: function() {
+                  return ''+
+                      this.series.name +': '+ this.y +'';
+              }
+          },
+          plotOptions: {
+              series: {
+                  stacking: 'normal'
+              }
+          },
+//          series: [{
+//              name: 'John',
+//              data: [5, 3, 4, 7, 2]
+//          }, {
+//              name: 'Jane',
+//              data: [2, 2, 3, 2, 1]
+//          }, {
+//              name: 'Joe',
+//              data: [3, 4, 4, 2, 5]
+//          }],
+          series: [{
+            name: 'aa',
+            data: []
+          }, {
+            name: 'bb',
+            data: []
+          }]
+      });
+
+      console.log(c=chart)
+      chart.series[0].addPoint([0, 1])
+      chart.series[1].addPoint([0, 2])
+      chart.series[0].addPoint([1, 10])
+
+  });
+});
