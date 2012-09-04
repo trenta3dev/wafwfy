@@ -107,7 +107,7 @@ $(function () {
     }
   });
 
-  var WafwfyApp = Backbone.View.extend({
+  var GridsterWafwfyApp = Backbone.View.extend({
     el: $(".gridster ul"),
     widgets: [
       EpicsWidget
@@ -129,7 +129,26 @@ $(function () {
     }
   });
 
-  window.wafwfyApp = new WafwfyApp;
+  var MetroUIWafwfyApp = Backbone.View.extend({
+    el: $(".gridster ul"),
+    widgets: [
+      EpicsWidget
+    ],
+    gridster: null,
+    initialize: function(){
+      $("body").metroUI();
+      this.render();
+    },
+    render: function(){
+      _.each(this.widgets, function(Widget){
+//        var widget = new Widget();
+//        this.gridster.add_widget(widget.render().el,
+//          widget.sizeX, widget.sizeY);
+      }, this)
+    }
+  });
+
+  window.wafwfyApp = new MetroUIWafwfyApp;
 //  window.storyList = new StoryListView;
 });
 
