@@ -11,8 +11,14 @@ logger.setLevel(logging.INFO)
 
 @app.route('/')
 def index():
+    from datetime import datetime
+
+    today = datetime.now()
+
     return render_template('index.html',
-        epics=['one', 'two']
+        epics=['one', 'two'],
+        day=today.day,
+        month=today.strftime("%B"),
     )
 
 
