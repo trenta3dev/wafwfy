@@ -24,13 +24,6 @@ def fetch_stories():
 
 
 @manager.command
-def fetch_current():
-    from wafwfy.tasks import fetch_current
-
-    fetch_current()
-
-
-@manager.command
 def flush_redis():
     from wafwfy import redis
 
@@ -40,7 +33,6 @@ def flush_redis():
 @manager.command
 def fetch_data():
     flush_redis()
-    fetch_current()
     fetch_stories()
 
 

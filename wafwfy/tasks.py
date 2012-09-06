@@ -1,6 +1,6 @@
 from wafwfy import celery_instance, redis, app
 from wafwfy.helpers import PivotalRequest
-from wafwfy.models import Story
+from wafwfy.models import Story, Iteration
 
 
 @celery_instance.task()
@@ -12,28 +12,42 @@ def fetch_stories():
     request = PivotalRequest()
     pipe = redis.pipeline(transaction=True)
 
-    for story in request.iter_stories():
-        story_id = story['id']
-        app.logger.info('Processing story: %s', story_id)
+    for iteration in request.iter_iterations():
+        iteration_id = iteration['id']
+        Iteration.create(iteration, pipe=pipe)
 
+        app.logger.info('Processing iteration: %s', iteration_id)
+
+        for story in request.iter_stories(iteration['stories']):
+            story_id = story['id']
+            Story.create(story, pipe=pipe)
+            Iteration.add_story(iteration_id, story_id, pipe=pipe)
+
+            app.logger.info(story_id)
+
+    app.logger.info('retrieve stories in the icebox')
+    for story in request.iter_icebox():
+        story_id = story['id']
         Story.create(story, pipe=pipe)
 
-    pipe.execute()
-
-
-@celery_instance.task()
-def fetch_current():
-    """
-    fetch current userstories from pivotaltracker and add some information
-    into the database.
-    """
-    request = PivotalRequest()
-    pipe = redis.pipeline(transaction=True)
-
-    for story in request.current():
-        story_id = story['id']
-        app.logger.info('Processing story: %s', story_id)
-
-        pipe.sadd(app.config['REDIS_CURRENT_KEY'], story_id)
+        app.logger.info(story_id)
 
     pipe.execute()
+
+
+#@celery_instance.task()
+#def fetch_current():
+#    """
+#    fetch current userstories from pivotaltracker and add some information
+#    into the database.
+#    """
+#    request = PivotalRequest()
+#    pipe = redis.pipeline(transaction=True)
+#
+#    for story in request.current():
+#        story_id = story['id']
+#        app.logger.info('Processing story: %s', story_id)
+#
+#        pipe.sadd(app.config['REDIS_CURRENT_KEY'], story_id)
+#
+#    pipe.execute()

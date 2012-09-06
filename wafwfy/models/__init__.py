@@ -5,61 +5,74 @@ from flask import json
 from wafwfy import redis, app
 
 
-class Story(object):
+class BaseRedisModel(object):
+    LIST_KEY = None
+    ENTRY_KEY = None
+    STATE_KEY = None
+
+    PK_ATTRIB = 'id'
+    STATE_ATTRIB = 'current_state'
+
     @classmethod
-    def create(cls, d_story, pipe=None):
+    def create(cls, a_dict, pipe=None):
         commit = False
         if pipe is None:
             pipe = redis.pipeline(transaction=True)
             commit = True
 
-        story_id = d_story['id']
+        the_id = a_dict[cls.PK_ATTRIB]
 
-        story_key = app.config['REDIS_STORY_KEY'].format(story_id=story_id)
+        the_key = cls.ENTRY_KEY.format(pk=the_id)
 
-        pipe.delete(story_key)
-        pipe.set(story_key, json.dumps(d_story))
-        pipe.sadd(app.config['REDIS_STORIES_KEY'], story_id)
-        pipe.sadd(
-            app.config['REDIS_STORIES_STATE_KEY'].format(
-                state=d_story['current_state']
-            ),
-            story_id
-        )
+        pipe.delete(the_key)
+        pipe.set(the_key, json.dumps(a_dict))
+        pipe.rpush(cls.LIST_KEY, the_id)
+
+        if cls.STATE_KEY and cls.STATE_ATTRIB:
+            pipe.rpush(
+                cls.STATE_KEY.format(state=a_dict[cls.STATE_ATTRIB]), the_id
+            )
 
         if commit:
             pipe.execute()
 
     @classmethod
     def get(cls, id_):
-        story_s = redis.get(
-            app.config['REDIS_STORY_KEY'].format(story_id=id_)
-        )
-        story = json.loads(story_s)
-        story['id'] = id_
+        a_string = redis.get(cls.ENTRY_KEY.format(pk=id_))
+        a_dict = json.loads(a_string)
+        a_dict['id'] = id_
 
-        return story
+        return a_dict
 
     @classmethod
     def all(cls):
-        ids = redis.smembers(app.config['REDIS_STORIES_KEY'])
+        ids = redis.lrange(cls.LIST_KEY, 0, -1)
 
         for id_ in ids:
             yield cls.get(id_)
+
+
+class Story(BaseRedisModel):
+    LIST_KEY = 'stories'
+    ENTRY_KEY = 'story:{pk}'
+    STATE_KEY = 'stories:{state}'
 
 
     @classmethod
     def current(cls):
-        ids = redis.smembers(app.config['REDIS_CURRENT_KEY'])
+        iter_ids = redis.lrange(
+            Iteration.STATE_KEY.format(state='current'), 0, -1)
 
-        for id_ in ids:
-            yield cls.get(id_)
+        for iter_id_ in iter_ids:
+            ids = redis.smembers(Iteration.STORIES_LIST.format(pk=iter_id_))
+            for id_ in ids:
+                yield cls.get(id_)
 
 
     @classmethod
     def count_icebox(cls):
         return redis.scard(
-            app.config['REDIS_STORIES_STATE_KEY'].format(
+            cls.STATE_KEY.format(
                 state='unscheduled'
             )
         )
@@ -67,10 +80,36 @@ class Story(object):
     @classmethod
     def iter_icebox(cls):
         ids = redis.smembers(
-            app.config['REDIS_STORIES_STATE_KEY'].format(
+            cls.STATE_KEY.format(
                 state='unscheduled'
             )
         )
 
         for id_ in ids:
             yield cls.get(id_)
+
+
+class Iteration(BaseRedisModel):
+    LIST_KEY = 'iterations'
+    ENTRY_KEY = 'iteration:{pk}'
+    STATE_KEY = 'iterations:{state}'
+    STORIES_LIST = 'iteration:{pk}:stories'
+
+    @classmethod
+    def create(cls, a_dict, pipe=None):
+        new_dict = dict(a_dict)
+        new_dict.pop('stories')
+        return super(Iteration, cls).create(new_dict, pipe=pipe)
+
+    @classmethod
+    def add_story(cls, iteration_id, story_id, pipe=None):
+        commit = False
+        if pipe is None:
+            pipe = redis.pipeline(transaction=True)
+            commit = True
+
+        iteration_key = cls.STORIES_LIST.format(pk=iteration_id)
+        pipe.sadd(iteration_key, story_id)
+
+        if commit:
+            pipe.execute()
