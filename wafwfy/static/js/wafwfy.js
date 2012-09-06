@@ -57,8 +57,8 @@ $(function () {
 
   var StoryView = Backbone.View.extend({
     template: _.template($('#story-item').html()),
-    tagName: 'li',
-    className: "metro-reply",
+    tagName: 'div',
+    className: "tile",
     render: function () {
       var model_json = this.model.toJSON();
 
@@ -101,7 +101,7 @@ $(function () {
   });
 
   var CurrentStoryListView = Backbone.View.extend({
-    el: $('#current>ul'),
+    el: $('#current>div'),
     events: {
       'click button.story-switch': 'handleStatus'
     },
@@ -126,14 +126,13 @@ $(function () {
     },
 
     render: function () {
-      var $el = $(this.el);
-//      _.each(this.stories.allStates, function (state) {
-//        $('button.' + state).html(state + ' - ' + this.stories.getCountByState(state));
-//      }, this);
+      var $el = $(this.el)
+        , modelLength = this.stories.models.length / 3;
 
-//      $el.find('tbody').html('');
-      _.each(this.stories.models, function (story) {
+      _.each(this.stories.models, function (story, i) {
         $el.append(new StoryView({model: story}).render().el);
+        if (i % modelLength == 0 && i !== 0)
+          $el.append($('<br>'))
       }, this);
 
     }
@@ -213,7 +212,7 @@ $(function () {
         backgroundColor: 'transparent'
       },
       colors: [
-      	'#FFFFFF'
+        '#ffffff'
       ],
       title: {
         text: null
