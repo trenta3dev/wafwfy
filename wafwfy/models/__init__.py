@@ -16,7 +16,6 @@ class Story(object):
         story_id = d_story['id']
 
         story_key = app.config['REDIS_STORY_KEY'].format(story_id=story_id)
-        del d_story['id']
 
         pipe.delete(story_key)
         pipe.set(story_key, json.dumps(d_story))
@@ -47,6 +46,15 @@ class Story(object):
 
         for id_ in ids:
             yield cls.get(id_)
+
+
+    @classmethod
+    def current(cls):
+        ids = redis.smembers(app.config['REDIS_CURRENT_KEY'])
+
+        for id_ in ids:
+            yield cls.get(id_)
+
 
     @classmethod
     def count_icebox(cls):

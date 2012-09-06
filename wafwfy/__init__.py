@@ -10,6 +10,7 @@ app.config.from_pyfile('settings_local.py', silent=True)
 app.config.setdefault('PIVOTAL_TOKEN', None)
 app.config.setdefault('PIVOTAL_PROJECT', None)
 app.config.setdefault('REDIS_STORY_KEY', 'story:{story_id}')
+app.config.setdefault('REDIS_CURRENT_KEY', 'current')
 app.config.setdefault('REDIS_STORIES_KEY', 'stories')
 app.config.setdefault('REDIS_STORIES_STATE_KEY', 'stories:{state}')
 

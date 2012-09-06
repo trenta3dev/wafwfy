@@ -23,6 +23,27 @@ def fetch_stories():
     fetch_stories()
 
 
+@manager.command
+def fetch_current():
+    from wafwfy.tasks import fetch_current
+
+    fetch_current()
+
+
+@manager.command
+def flush_redis():
+    from wafwfy import redis
+
+    redis.flushdb()
+
+
+@manager.command
+def fetch_data():
+    flush_redis()
+    fetch_current()
+    fetch_stories()
+
+
 manager.add_command('runserver',  Server(port=7998))
 
 

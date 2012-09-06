@@ -28,6 +28,7 @@ textarea{overflow:auto;vertical-align:top;}
 .metro a,.metro .link{font-size:12px;font-weight:200;color:#44d1da;}
 .metro .tertiary-info,.metro .tertiary-info-secondary{font-size:10pt;font-weight:12px;color:#a5a5a5;}
 .metro .tertiary-info-secondary{font-size:9pt;}
+
 .bg-color-blue{background-color:#2d89f0 !important;}
 .bg-color-blueLight{background-color:#44a3aa !important;}
 .bg-color-blueDark{background-color:#045097 !important;}
@@ -43,6 +44,7 @@ textarea{overflow:auto;vertical-align:top;}
 .bg-color-purple{background-color:#603cba !important;}
 .bg-color-darken{background-color:#1c1c1c !important;}
 .bg-color-white{background-color:#ffffff !important;}
+
 .place-left{float:left;}
 .place-right{float:right;}
 .pos-rel{position:relative;}

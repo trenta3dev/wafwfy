@@ -15,3 +15,9 @@ class DefaultSettings:
             'args': ()
         },
     }
+
+    USER_EMAIL = {
+        "Mattia Larentis": "mattialarentis@gmail.com",
+        "Stefano Parmesan": "armisael.silix@gmail.com",
+        "Martino Pizzol": "martino.pizzol@gmail.com",
+    }
