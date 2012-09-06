@@ -26,23 +26,23 @@ $(function () {
   var StoryList = Backbone.Collection.extend({
     model: Story,
     url: "/api/story/",
-    allStates: ['unscheduled','accepted','unstarted','delivered','started', 'finished', 'rejected'],
+    allStates: ['unscheduled', 'accepted', 'unstarted', 'delivered', 'started', 'finished', 'rejected'],
     parse: function (json) {
       return json.objects;
     },
 
-    getStoryByType: function(type) {
+    getStoryByType: function (type) {
       return this.where({current_state: type})
     },
 
-    filterByState: function(type){
+    filterByState: function (type) {
       var filteredStories = this.getStoryByType(type);
-      _.each(filteredStories, function(story){
+      _.each(filteredStories, function (story) {
         story.attributes.show = !story.attributes.show;
       });
     },
 
-    getCountByState: function(type){
+    getCountByState: function (type) {
       return this.getStoryByType(type).length;
     }
   });
@@ -59,13 +59,13 @@ $(function () {
     template: _.template($('#story-item').html()),
     tagName: 'li',
     className: "metro-reply",
-    render : function () {
+    render: function () {
       var model_json = this.model.toJSON();
 
       $(this.el).html(this.template(this.model.toJSON()));
       $(this.el).addClass('bg-color-' + stateToColor[this.model.attributes.current_state]);
 
-      if(!model_json.show)
+      if (!model_json.show)
         $(this.el).hide();
       return this;
     }
@@ -88,8 +88,8 @@ $(function () {
 
     render: function () {
       var $el = $(this.el);
-      _.each(this.stories.allStates, function(state){
-          $('button.'+state).html(state + ' - ' + this.stories.getCountByState(state));
+      _.each(this.stories.allStates, function (state) {
+        $('button.' + state).html(state + ' - ' + this.stories.getCountByState(state));
       }, this);
 
 //      $el.find('tbody').html('');
@@ -151,7 +151,7 @@ $(function () {
   });
 
   var EpicsWidget = GenericWidget.extend({
-    render: function(){
+    render: function () {
       $(this.el).html('Epics');
       return this;
     }
@@ -163,18 +163,18 @@ $(function () {
       EpicsWidget
     ],
     gridster: null,
-    initialize: function(){
+    initialize: function () {
       this.gridster = $(this.el).gridster({
         widget_margins: [10, 10],
         widget_base_dimensions: [140, 140]
       }).data('gridster');
       this.render();
     },
-    render: function(){
-      _.each(this.widgets, function(Widget){
+    render: function () {
+      _.each(this.widgets, function (Widget) {
         var widget = new Widget();
         this.gridster.add_widget(widget.render().el,
-                                  widget.sizeX, widget.sizeY);
+          widget.sizeX, widget.sizeY);
       }, this)
     }
   });
@@ -185,12 +185,12 @@ $(function () {
       EpicsWidget
     ],
     gridster: null,
-    initialize: function(){
+    initialize: function () {
       $("body").metroUI();
       this.render();
     },
-    render: function(){
-      _.each(this.widgets, function(Widget){
+    render: function () {
+      _.each(this.widgets, function (Widget) {
 //        var widget = new Widget();
 //        this.gridster.add_widget(widget.render().el,
 //          widget.sizeX, widget.sizeY);
@@ -202,40 +202,79 @@ $(function () {
   window.currentStoryList = new CurrentStoryListView;
 });
 
-
 $(function () {
+  var velocityChart, chart;
+  $(document).ready(function () {
+    velocityChart = new Highcharts.Chart({
+      chart: {
+        renderTo: 'velocity-chart',
+        type: 'column',
+        margin: [ 0, 0, 0, 0],
+        backgroundColor: 'transparent'
+      },
+      colors: [
+      	'#FFFFFF'
+      ],
+      title: {
+        text: null
+      },
+      xAxis: {
+        labels: {
+          enabled: false
+        }
+      },
+      yAxis: {
+        labels: {
+          enabled: false
+        },
+        gridLineColor: 'transparent'
+      },
+      legend: {
+        enabled: false
+      },
+      tooltip: {
+        enabled: false
+      },
+      series: [
+        {
+          name: 'Velocity',
+          data: [34.4, 21.8, 20.1, 20, 19.6, 19.5, 19.1, 18.4, 18, 20]
+        }
+      ],
+      credits: {
+        enabled: false
+      }
+    });
 
-  var chart;
-  $(document).ready(function() {
-      chart = new Highcharts.Chart({
-          chart: {
-              renderTo: 'tags-chart',
-              type: 'bar'
-          },
-          title: {
-              text: 'Epics'
-          },
-          xAxis: {
+    chart = new Highcharts.Chart({
+      chart: {
+        renderTo: 'tags-chart',
+        type: 'bar',
+      },
+      title: {
+        text: 'Epics'
+      },
+      xAxis: {
 //              categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
-              categories: epics
-          },
-          yAxis: {
-              min: 0
-          },
-          legend: {
-            enabled: false
-          },
-          tooltip: {
-              formatter: function() {
-                  return ''+
-                      this.series.name +': '+ this.y +'';
-              }
-          },
-          plotOptions: {
-              series: {
-                  stacking: 'normal'
-              }
-          },
+        categories: epics
+      },
+      yAxis: {
+        min: 0
+      },
+      legend: {
+        enabled: false
+      },
+      tooltip: {
+        formatter: function () {
+          return '' +
+            this.series.name + ': ' + this.y + '';
+        }
+      },
+      plotOptions: {
+        series: {
+          stacking: 'normal'
+        }
+      },
 //          series: [{
 //              name: 'John',
 //              data: [5, 3, 4, 7, 2]
@@ -246,19 +285,22 @@ $(function () {
 //              name: 'Joe',
 //              data: [3, 4, 4, 2, 5]
 //          }],
-          series: [{
-            name: 'aa',
-            data: []
-          }, {
-            name: 'bb',
-            data: []
-          }]
-      });
+      series: [
+        {
+          name: 'aa',
+          data: []
+        },
+        {
+          name: 'bb',
+          data: []
+        }
+      ]
+    });
 
-      console.log(c=chart)
-      chart.series[0].addPoint([0, 1])
-      chart.series[1].addPoint([0, 2])
-      chart.series[0].addPoint([1, 10])
+    console.log(c = chart)
+    chart.series[0].addPoint([0, 1])
+    chart.series[1].addPoint([0, 2])
+    chart.series[0].addPoint([1, 10])
 
   });
 });
