@@ -1,6 +1,6 @@
 import logging
 
-from flask import render_template, jsonify
+from flask import render_template, jsonify, redirect
 from wafwfy import app
 
 
@@ -21,6 +21,14 @@ def story():
     from wafwfy.models import Story
 
     stories = Story.all()
+    return jsonify(objects=list(stories))
+
+
+@app.route('/api/current/')
+def story_current():
+    from wafwfy.models import Story
+
+    stories = Story.current()
     return jsonify(objects=list(stories))
 
 
@@ -48,3 +56,14 @@ def tags_count():
         for label in story.get('labels', []):
             tags[label][story['current_state']] += 1
     return jsonify(objects=tags)
+
+
+@app.route('/avatar/<user>')
+def avatar(user):
+    from hashlib import md5
+
+    email = md5(app.config['USER_EMAIL'].get(user, "")).hexdigest()
+
+    return redirect(
+        "https://secure.gravatar.com/avatar/{0}".format(email)
+    )

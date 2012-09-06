@@ -1,10 +1,21 @@
 $(function () {
+  var stateToColor = {
+    'unscheduled': 'white',
+    'accepted': 'green',
+    'unstarted': 'white',
+    'delivered': 'orange',
+    'started': 'blue',
+    'finished': 'blueDark',
+    'rejected': 'red'
+  };
+
   var Story = Backbone.Model.extend({
     defaults: {
       "story_type": "",
       "name": "",
       "labels": [],
       "current_state": "",
+      "requested_by": "",
       "owned_by": "",
       "estimate": "",
       "id": "",
@@ -15,7 +26,7 @@ $(function () {
   var StoryList = Backbone.Collection.extend({
     model: Story,
     url: "/api/story/",
-    allStates: ['unscheduled','accepted','unstarted','delivered','started', 'finished'],
+    allStates: ['unscheduled','accepted','unstarted','delivered','started', 'finished', 'rejected'],
     parse: function (json) {
       return json.objects;
     },
@@ -36,13 +47,23 @@ $(function () {
     }
   });
 
+  var CurrentStoryList = Backbone.Collection.extend({
+    model: Story,
+    url: "/api/current/",
+    parse: function (json) {
+      return json.objects;
+    }
+  });
+
   var StoryView = Backbone.View.extend({
     template: _.template($('#story-item').html()),
-    tagName: 'tr',
-    render: function () {
+    tagName: 'li',
+    className: "metro-reply",
+    render : function () {
       var model_json = this.model.toJSON();
 
       $(this.el).html(this.template(this.model.toJSON()));
+      $(this.el).addClass('bg-color-' + stateToColor[this.model.attributes.current_state]);
 
       if(!model_json.show)
         $(this.el).hide();
@@ -51,28 +72,18 @@ $(function () {
   });
 
   var StoryListView = Backbone.View.extend({
-    el: $('table#story-table'),
+    el: $('#current>ul'),
     events: {
       'click button.story-switch': 'handleStatus'
     },
 
     initialize: function () {
       var self = this;
-      this.stories = new StoryList();
+      this.stories = new CurrentStoryList();
       this.stories.fetch({success: function () {
         self.render();
       }});
       _.bindAll(this, 'handleStatus');
-    },
-
-    handleStatus: function(ev){
-      var button = $(ev.target);
-      this.stories.filterByState(button.attr('data-type'));
-      if(button.hasClass("on"))
-        button.removeClass("on").addClass("off");
-      else
-        button.removeClass("off").addClass("on");
-      this.render();
     },
 
     render: function () {
@@ -81,7 +92,46 @@ $(function () {
           $('button.'+state).html(state + ' - ' + this.stories.getCountByState(state));
       }, this);
 
-      $el.find('tbody').html('');
+//      $el.find('tbody').html('');
+      _.each(this.stories.models, function (story) {
+        $el.append(new StoryView({model: story}).render().el);
+      }, this);
+
+    }
+  });
+
+  var CurrentStoryListView = Backbone.View.extend({
+    el: $('#current>ul'),
+    events: {
+      'click button.story-switch': 'handleStatus'
+    },
+
+    initialize: function () {
+      var self = this;
+      this.stories = new CurrentStoryList();
+      this.stories.fetch({success: function () {
+        self.render();
+      }});
+      _.bindAll(this, 'handleStatus');
+    },
+
+    handleStatus: function (ev) {
+      var button = $(ev.target);
+      this.stories.filterByState(button.attr('data-type'));
+      if (button.hasClass("on"))
+        button.removeClass("on").addClass("off");
+      else
+        button.removeClass("off").addClass("on");
+      this.render();
+    },
+
+    render: function () {
+      var $el = $(this.el);
+//      _.each(this.stories.allStates, function (state) {
+//        $('button.' + state).html(state + ' - ' + this.stories.getCountByState(state));
+//      }, this);
+
+//      $el.find('tbody').html('');
       _.each(this.stories.models, function (story) {
         $el.append(new StoryView({model: story}).render().el);
       }, this);
@@ -107,7 +157,7 @@ $(function () {
     }
   });
 
-  var WafwfyApp = Backbone.View.extend({
+  var GridsterWafwfyApp = Backbone.View.extend({
     el: $(".gridster ul"),
     widgets: [
       EpicsWidget
@@ -129,8 +179,27 @@ $(function () {
     }
   });
 
-  window.wafwfyApp = new WafwfyApp;
-//  window.storyList = new StoryListView;
+  var MetroUIWafwfyApp = Backbone.View.extend({
+    el: $(".gridster ul"),
+    widgets: [
+      EpicsWidget
+    ],
+    gridster: null,
+    initialize: function(){
+      $("body").metroUI();
+      this.render();
+    },
+    render: function(){
+      _.each(this.widgets, function(Widget){
+//        var widget = new Widget();
+//        this.gridster.add_widget(widget.render().el,
+//          widget.sizeX, widget.sizeY);
+      }, this)
+    }
+  });
+
+  window.wafwfyApp = new MetroUIWafwfyApp;
+  window.currentStoryList = new CurrentStoryListView;
 });
 
 

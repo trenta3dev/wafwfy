@@ -49,6 +49,7 @@ class PivotalRequest(object):
             name=find('name').text,
             story_type=find('story_type').text,
             current_state=find('current_state').text,
+            requested_by=find('requested_by').text,
         )
 
         try:
@@ -79,4 +80,15 @@ class PivotalRequest(object):
         for story_el in root.findall('story'):
             story = self.story_element_to_dict(story_el)
 
+            yield story
+
+    def current(self):
+        # http://www.pivotaltracker.com/services/v3/projects/$PROJECT_ID/iterations/current_backlog
+        from xml.etree import ElementTree as etree
+
+        content = self.get(self.project_root + "iterations/current")
+        root = etree.fromstring(content)
+        stories = root.iter('story')
+        for story_el in stories:
+            story = self.story_element_to_dict(story_el)
             yield story
