@@ -218,7 +218,7 @@ $(function () {
 });
 
 $(function () {
-  var velocityChart, chart;
+  var chart;
   $(document).ready(function () {
     $.get('/api/velocity/last/5/').done(function (data) {
       new Highcharts.Chart({
