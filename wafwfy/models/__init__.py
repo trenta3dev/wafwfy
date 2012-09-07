@@ -94,12 +94,17 @@ class Iteration(BaseRedisModel):
     LIST_KEY = 'iterations'
     ENTRY_KEY = 'iteration:{pk}'
     STATE_KEY = 'iterations:{state}'
+    CURRENT_KEY = 'iterations:current:pk'
     STORIES_LIST = 'iteration:{pk}:stories'
 
     @classmethod
     def create(cls, a_dict, pipe=None):
         new_dict = dict(a_dict)
         new_dict.pop('stories')
+
+        if new_dict['current_state'] == 'current':
+            pipe.set(cls.CURRENT_KEY, new_dict['id'])
+
         return super(Iteration, cls).create(new_dict, pipe=pipe)
 
     @classmethod
