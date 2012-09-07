@@ -90,6 +90,7 @@ class Story(BaseRedisModel):
 
 
 class Iteration(BaseRedisModel):
+    STORY_KEY = 'story:{pk}'
     LIST_KEY = 'iterations'
     ENTRY_KEY = 'iteration:{pk}'
     STATE_KEY = 'iterations:{state}'
@@ -113,3 +114,18 @@ class Iteration(BaseRedisModel):
 
         if commit:
             pipe.execute()
+
+    @classmethod
+    def get_velocity_for_iteration(cls, iteration_id):
+        stories_ids = redis.smembers(cls.STORIES_LIST.format(pk=iteration_id))
+        stories_value = [
+            json.loads(
+                redis.get(cls.STORY_KEY.format(pk=pk))
+            ).get('estimate', 0) for pk in stories_ids
+        ]
+        return sum(stories_value)
+
+    @classmethod
+    def get_current_velocity(cls):
+        return cls.get_velocity_for_iteration(8)
+#        return cls.get_velocity_for_iteration(redis.lindex(cls.LIST_KEY, -1))

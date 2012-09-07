@@ -12,6 +12,7 @@ logger.setLevel(logging.INFO)
 @app.route('/')
 def index():
     from datetime import datetime
+    from wafwfy.models import Iteration
 
     today = datetime.now()
 
@@ -19,6 +20,7 @@ def index():
         epics=['one', 'two'],
         day=today.day,
         month=today.strftime("%B"),
+        velocity=Iteration.get_current_velocity(),
     )
 
 
