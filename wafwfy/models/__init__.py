@@ -122,15 +122,22 @@ class Iteration(BaseRedisModel):
 
     @classmethod
     def get_velocity_for_iteration(cls, iteration_id):
-        stories_ids = redis.smembers(cls.STORIES_LIST.format(pk=iteration_id))
-        stories_value = [
-            json.loads(
-                redis.get(cls.STORY_KEY.format(pk=pk))
-            ).get('estimate', 0) for pk in stories_ids
-        ]
-        return sum(stories_value)
+        stories_value = 0
+        for i in range(3):
+            pk = int(iteration_id) - i - 1
+            stories_ids = redis.smembers(cls.STORIES_LIST.format(pk=pk))
+            team_strength = float(json.loads(
+                redis.get(cls.ENTRY_KEY.format(pk=pk)))['team_strength'])
+
+            stories_value += sum([
+                json.loads(
+                    redis.get(cls.STORY_KEY.format(pk=pk))
+                ).get('estimate', 0) for pk in stories_ids
+            ]) * (1/team_strength)
+
+
+        return int(stories_value / 3)
 
     @classmethod
     def get_current_velocity(cls):
-        return cls.get_velocity_for_iteration(8)
-#        return cls.get_velocity_for_iteration(redis.lindex(cls.LIST_KEY, -1))
+        return cls.get_velocity_for_iteration(redis.get(cls.CURRENT_KEY))

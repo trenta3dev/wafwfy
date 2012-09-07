@@ -60,6 +60,7 @@ class PivotalRequest(object):
             stories=find('stories'),
             start=find('start').text,
             finish=find('finish').text,
+            team_strength=find('team_strength').text,
         )
 
         from pytz import utc
