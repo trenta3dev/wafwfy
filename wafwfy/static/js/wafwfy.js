@@ -220,51 +220,49 @@ $(function () {
 $(function () {
   var velocityChart, chart;
   $(document).ready(function () {
-    velocityChart = new Highcharts.Chart({
-      chart: {
-        renderTo: 'velocity-chart',
-        type: 'column',
-        margin: [ 0, 0, 0, 0],
-        backgroundColor: 'transparent'
-      },
-      colors: [
-        '#ffffff'
-      ],
-      title: {
-        text: null
-      },
-      xAxis: {
-        labels: {
-          enabled: false
-        }
-      },
-      yAxis: {
-        labels: {
+    $.get('/api/velocity/last/5/').done(function (data) {
+      new Highcharts.Chart({
+        chart: {
+          renderTo: 'velocity-chart',
+          type: 'column',
+          margin: [ 0, 0, 0, 0],
+          backgroundColor: 'transparent'
+        },
+        colors: [
+          '#ffffff'
+        ],
+        title: {
+          text: null
+        },
+        xAxis: {
+          labels: {
+            enabled: false
+          }
+        },
+        yAxis: {
+          labels: {
+            enabled: false
+          },
+          gridLineColor: 'transparent'
+        },
+        legend: {
           enabled: false
         },
-        gridLineColor: 'transparent'
-      },
-      legend: {
-        enabled: false
-      },
-      tooltip: {
-        enabled: false
-      },
-      series: [
-        {
-          name: 'Velocity',
-          data: function() {
-            $.get('/api/velocity/last/10/').done(function(data) {
-              return data;
-            });
-//            [34.4, 21.8, 20.1, 20, 19.6, 19.5, 19.1, 18.4, 18, 20]
+        tooltip: {
+          enabled: false
+        },
+        series: [
+          {
+            name: 'Velocity',
+            data: data.object
           }
+        ],
+        credits: {
+          enabled: false
         }
-      ],
-      credits: {
-        enabled: false
-      }
+      });
     });
+
 
     chart = new Highcharts.Chart({
       chart: {
