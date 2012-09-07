@@ -125,3 +125,30 @@ body {
 .width-auto {
     width: auto !important;
 }
+
+.tile-magic {
+    background: #1C1C1C;
+    margin: 0 !important;
+    margin-top: -75px !important;
+    padding: 10px 20px !important;
+
+    // transition
+    transition: all 1s;
+    -moz-transition: all 1s; /* Firefox 4 */
+    -webkit-transition: all 1s; /* Safari and Chrome */
+    -o-transition: all 1s; /* Opera */
+
+    h2 {
+        display: inline-block;
+        float: right;
+        font-size: 30pt !important;
+    }
+    img {
+        height: 55px !important;
+        border: 1px solid white;
+    }
+}
+
+.tile-magic.visible {
+    margin-top: 0 !important;
+}

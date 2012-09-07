@@ -28,7 +28,11 @@
                 <!--<div class="text"><%= name %></div>-->
             <!--</div>-->
             <!--<div class="clearfix"></div>-->
-        <div class="tile-text">
+        <div class="tile-text tile-magic">
+            <img src="/avatar/<%= owned_by %>" style="height: 55px !important" />
+            <h2><%= estimate %></h2>
+        </div>
+        <div class="tile-text tile-animation" style="min-height: 140px; max-height: 140px; overflow: hidden;">
             <%= name %>
         </div>
     </script>

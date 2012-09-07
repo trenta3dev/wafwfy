@@ -127,14 +127,30 @@ $(function () {
 
     render: function () {
       var $el = $(this.el)
-        , modelLength = this.stories.models.length / 3;
+        , modelLength = this.stories.models.length / 3
+        , storyType
+        , length;
 
       _.each(this.stories.models, function (story, i) {
-        $el.append(new StoryView({model: story}).render().el);
+        storyType = story.attributes.story_type;
+
+        if (storyType === "feature")
+          $el.append(new StoryView({model: story}).render().el);
+        else
+          i--;
+
         if (i % modelLength == 0 && i !== 0)
           $el.append($('<br>'))
       }, this);
 
+      // animation
+      length = $('.tile-animation').length;
+      $('.tile-magic').eq(0).addClass('visible');
+
+      setInterval(function () {
+        $('.tile-magic.visible').toggleClass('visible');
+        $('.tile-magic').eq(Math.floor(Math.random() * length)).toggleClass('visible');
+      }, 2000);
     }
   });
 
