@@ -127,7 +127,7 @@ $(function () {
 
     render: function () {
       var $el = $(this.el)
-        , modelLength = this.stories.models.length / 3
+        , modelLength = Math.floor(this.stories.models.length / 3)
         , storyType
         , length;
 
