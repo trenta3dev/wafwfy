@@ -94,12 +94,17 @@ class Iteration(BaseRedisModel):
     LIST_KEY = 'iterations'
     ENTRY_KEY = 'iteration:{pk}'
     STATE_KEY = 'iterations:{state}'
+    CURRENT_KEY = 'iterations:current:pk'
     STORIES_LIST = 'iteration:{pk}:stories'
 
     @classmethod
     def create(cls, a_dict, pipe=None):
         new_dict = dict(a_dict)
         new_dict.pop('stories')
+
+        if new_dict['current_state'] == 'current':
+            pipe.set(cls.CURRENT_KEY, new_dict['id'])
+
         return super(Iteration, cls).create(new_dict, pipe=pipe)
 
     @classmethod
@@ -117,15 +122,22 @@ class Iteration(BaseRedisModel):
 
     @classmethod
     def get_velocity_for_iteration(cls, iteration_id):
-        stories_ids = redis.smembers(cls.STORIES_LIST.format(pk=iteration_id))
-        stories_value = [
-            json.loads(
-                redis.get(cls.STORY_KEY.format(pk=pk))
-            ).get('estimate', 0) for pk in stories_ids
-        ]
-        return sum(stories_value)
+        stories_value = 0
+        for i in range(3):
+            pk = int(iteration_id) - i - 1
+            stories_ids = redis.smembers(cls.STORIES_LIST.format(pk=pk))
+            team_strength = float(json.loads(
+                redis.get(cls.ENTRY_KEY.format(pk=pk)))['team_strength'])
+
+            stories_value += sum([
+                json.loads(
+                    redis.get(cls.STORY_KEY.format(pk=pk))
+                ).get('estimate', 0) for pk in stories_ids
+            ]) * (1/team_strength)
+
+
+        return int(stories_value / 3)
 
     @classmethod
     def get_current_velocity(cls):
-        return cls.get_velocity_for_iteration(8)
-#        return cls.get_velocity_for_iteration(redis.lindex(cls.LIST_KEY, -1))
+        return cls.get_velocity_for_iteration(redis.get(cls.CURRENT_KEY))
