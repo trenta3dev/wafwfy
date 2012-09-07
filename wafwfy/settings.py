@@ -20,4 +20,6 @@ class DefaultSettings:
         "Mattia Larentis": "mattialarentis@gmail.com",
         "Stefano Parmesan": "armisael.silix@gmail.com",
         "Martino Pizzol": "martino.pizzol@gmail.com",
+        "Davide Setti": "davide.setti@gmail.com",
+        "Michele Di Cosmo": "micheledicosmo@gmail.com",
     }
