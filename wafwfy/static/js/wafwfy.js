@@ -253,7 +253,12 @@ $(function () {
       series: [
         {
           name: 'Velocity',
-          data: [34.4, 21.8, 20.1, 20, 19.6, 19.5, 19.1, 18.4, 18, 20]
+          data: function() {
+            $.get('/api/velocity/last/10/').done(function(data) {
+              return data;
+            });
+//            [34.4, 21.8, 20.1, 20, 19.6, 19.5, 19.1, 18.4, 18, 20]
+          }
         }
       ],
       credits: {
