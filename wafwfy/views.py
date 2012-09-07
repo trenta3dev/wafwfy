@@ -40,6 +40,28 @@ def story_current():
     return jsonify(objects=list(stories))
 
 
+@app.route('/api/velocity/<int:id>/')
+def velocity_for_iteraction(id):
+    from wafwfy.models import Iteration
+    return jsonify(object=Iteration.get_velocity_for_iteration(id))
+
+
+@app.route('/api/velocity/last/<int:num>/')
+def velocity_for_n_iteractions(num):
+    from wafwfy.models import Iteration
+    all_velocity = []
+    current_iteration = Iteration.get_current()
+    for i in range(num):
+        all_velocity.append(Iteration.get_velocity_for_iteration(current_iteration-i))
+    return jsonify(object=all_velocity)
+
+
+@app.route('/api/velocity/')
+def current_velocity():
+    from wafwfy.models import Iteration
+    return jsonify(object=Iteration.get_velocity_for_iteration(Iteration.get_current()))
+
+
 @app.route('/api/tags/')
 def tags():
     from wafwfy.models import Story

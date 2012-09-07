@@ -96,6 +96,7 @@ class Iteration(BaseRedisModel):
     STATE_KEY = 'iterations:{state}'
     CURRENT_KEY = 'iterations:current:pk'
     STORIES_LIST = 'iteration:{pk}:stories'
+    INITIAL_VELOCITY = 15
 
     @classmethod
     def create(cls, a_dict, pipe=None):
@@ -123,6 +124,14 @@ class Iteration(BaseRedisModel):
     @classmethod
     def get_velocity_for_iteration(cls, iteration_id):
         stories_value = 0
+
+        if iteration_id <= 0:
+            return 0
+        elif iteration_id == 1 or iteration_id == 2:
+            return cls.INITIAL_VELOCITY
+        elif iteration_id == 3:
+            return cls.INITIAL_VELOCITY
+
         for i in range(3):
             pk = int(iteration_id) - i - 1
             stories_ids = redis.smembers(cls.STORIES_LIST.format(pk=pk))
@@ -133,11 +142,15 @@ class Iteration(BaseRedisModel):
                 json.loads(
                     redis.get(cls.STORY_KEY.format(pk=pk))
                 ).get('estimate', 0) for pk in stories_ids
-            ]) * (1/team_strength)
+            ]) / team_strength
 
 
         return int(stories_value / 3)
 
     @classmethod
     def get_current_velocity(cls):
-        return cls.get_velocity_for_iteration(redis.get(cls.CURRENT_KEY))
+        return cls.get_velocity_for_iteration(cls.get_current())
+
+    @classmethod
+    def get_current(cls):
+        return int(redis.get(cls.CURRENT_KEY))
