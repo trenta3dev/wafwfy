@@ -149,6 +149,9 @@ $(function () {
 
       setInterval(function () {
         $('.tile-magic.visible').toggleClass('visible');
+        //TODO mettere tutte le storie in un array mescolato,
+        //     estrarre il primo elemento
+        //     quando l'array è vuoto ricrearlo
         $('.tile-magic').eq(Math.floor(Math.random() * length)).toggleClass('visible');
       }, 2000);
     }
@@ -305,17 +308,22 @@ $(function () {
 //          }],
       series: [
         {
-          name: 'aa',
+          name: 'unscheduled',
           data: []
         },
         {
-          name: 'bb',
+          name: 'scheduled',
+          data: []
+        },
+        {
+          name: 'finished',
           data: []
         }
       ]
     });
 
     console.log(c = chart)
+    // series[#typeofstory].addPoint([#epic, #story])
     chart.series[0].addPoint([0, 1])
     chart.series[1].addPoint([0, 2])
     chart.series[0].addPoint([1, 10])

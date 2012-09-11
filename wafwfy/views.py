@@ -52,14 +52,15 @@ def velocity_for_n_iteractions(num):
     all_velocity = []
     current_iteration = Iteration.get_current()
     for i in range(num):
-        all_velocity.append(Iteration.get_velocity_for_iteration(current_iteration-i))
+        all_velocity.append(Iteration.get_velocity_for_iteration(current_iteration-i-1))
+    all_velocity.reverse()
     return jsonify(object=all_velocity)
 
 
 @app.route('/api/velocity/')
 def current_velocity():
     from wafwfy.models import Iteration
-    return jsonify(object=Iteration.get_velocity_for_iteration(Iteration.get_current()))
+    return jsonify(object=Iteration.get_current_velocity())
 
 
 @app.route('/api/tags/')
