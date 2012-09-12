@@ -52,6 +52,9 @@ $(function () {
     url: "/api/current/",
     parse: function (json) {
       return json.objects;
+    },
+    getStoryByType: function (type) {
+      return this.where({story_type: type})
     }
   });
 
@@ -127,32 +130,48 @@ $(function () {
 
     render: function () {
       var $el = $(this.el)
-        , modelLength = Math.floor(this.stories.models.length / 3)
-        , storyType
-        , length;
+        , featured = this.stories.getStoryByType('feature')
+        , modelLength = Math.floor(featured.length / 3)
+        , length
+        , arrayFull = []
+        , array
+        , shuffle = function (array) {
+          var tmp, current, top = array.length;
 
-      _.each(this.stories.models, function (story, i) {
-        storyType = story.attributes.story_type;
+          if (top) while (--top) {
+            current = Math.floor(Math.random() * (top + 1));
+            tmp = array[current];
+            array[current] = array[top];
+            array[top] = tmp;
+          }
 
-        if (storyType === "feature")
-          $el.append(new StoryView({model: story}).render().el);
-        else
-          i--;
+          return array;
+        };
 
-        if (i % modelLength == 0 && i !== 0)
-          $el.append($('<br>'))
+
+      _.each(featured, function (story, i) {
+        var $element = new StoryView({model: story}).render().el;
+        $el.append($element);
+
+        if (i % modelLength == 0 && i > 0)
+          $el.append($('<br>'));
+
+        arrayFull.push($element);
       }, this);
 
-      // animation
-      length = $('.tile-animation').length;
-      $('.tile-magic').eq(0).addClass('visible');
+      // copy the arrayFull in the array
+      array = shuffle(arrayFull.slice(0));
 
+      // animation
       setInterval(function () {
+        var element = array.pop();
+
         $('.tile-magic.visible').toggleClass('visible');
-        //TODO mettere tutte le storie in un array mescolato,
-        //     estrarre il primo elemento
-        //     quando l'array è vuoto ricrearlo
-        $('.tile-magic').eq(Math.floor(Math.random() * length)).toggleClass('visible');
+        $(element).find('.tile-magic').toggleClass('visible');
+
+        if (array.length === 0)
+          array = shuffle(arrayFull.slice(0));
+
       }, 2000);
     }
   });
