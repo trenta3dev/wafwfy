@@ -6,14 +6,18 @@ class DefaultSettings:
     SQLALCHEMY_DATABASE_URI = 'postgresql://wafwfy@localhost/wafwfy'
     ADMINS = ['admin@wafwfy.ahref.eu', ]
 
+    # redis configuration
+    REDIS_APP_DB = 0
+    REDIS_CELERY_DB = 1
+
     # celery configuration
-    BROKER_URL = 'redis://localhost:6379/0'
+    BROKER_URL = 'redis://localhost:6379/{0}'.format(REDIS_CELERY_DB)
 
     from datetime import timedelta
     CELERYBEAT_SCHEDULE = {
-        'fetch_userstories': {
-            'task': 'wafwfy.tasks.fetch_userstories',
-            'schedule': timedelta(seconds=60),
+        'fetch_stories': {
+            'task': 'wafwfy.tasks.fetch_stories',
+            'schedule': timedelta(minutes=60),
             'args': ()
         },
     }

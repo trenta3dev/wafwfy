@@ -95,7 +95,8 @@ def tags_count():
         for label in story.get('labels', []):
             if label not in tag_to_id:
                 continue
-            tags[tag_to_id[label]][story['current_state']] += 1
+            tags[tag_to_id[label]][story['current_state']] += \
+                story.get('estimate', 0.5)
     return jsonify(objects=tags)
 
 
