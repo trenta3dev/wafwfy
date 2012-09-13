@@ -290,41 +290,55 @@ $(function () {
       chart: {
         renderTo: 'tags-chart',
         type: 'bar',
+        margin: [ 0, 0, 0, 150],
+        backgroundColor: 'transparent',
+        borderColor: 'transparent'
       },
+      colors: [
+        '#44a3aa',
+        '#e3a21a',
+        '#99b433'
+      ],
       title: {
-        text: 'Epics'
+        text: null
       },
       xAxis: {
-//              categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
-        categories: epics
+        categories: epics,
+        gridLineColor: 'transparent',
+        labels: {
+          style: {
+            color: '#FFFFFF',
+            'font-weight': 'bold'
+          }
+        }
       },
       yAxis: {
-        min: 0
+        min: 0,
+        gridLineColor: 'transparent'
       },
       legend: {
         enabled: false
       },
       tooltip: {
-        formatter: function () {
-          return '' +
-            this.series.name + ': ' + this.y + '';
-        }
+        enabled: false
       },
       plotOptions: {
         series: {
           stacking: 'normal'
+        },
+        bar: {
+//          borderColor: 'transparent'
+          dataLabels: {
+            style: {
+              color: '#FFFFFF',
+              'font-weight': 'bold'
+            }
+          }
         }
       },
-//          series: [{
-//              name: 'John',
-//              data: [5, 3, 4, 7, 2]
-//          }, {
-//              name: 'Jane',
-//              data: [2, 2, 3, 2, 1]
-//          }, {
-//              name: 'Joe',
-//              data: [3, 4, 4, 2, 5]
-//          }],
+      credits: {
+        enabled: false
+      },
       series: [
         {
           name: 'unscheduled',
@@ -344,23 +358,22 @@ $(function () {
     // anything not in this is supposed to be 1.
     var state_to_series = {
       'unscheduled': 0,
-      'finished': 2
+      'accepted': 2
     };
-    $.get('/api/epics/').done(function(data) {
-      for (var key in data['objects']) {
-        for (var state in data['objects'][key]) {
-          console.log(key, state, data['objects'][key][state]);
+    $.get('/api/epics/').done(function (data) {
+      var points;
+      for (var epic in data['objects']) {
+        points = [0, 0, 0];
+        for (var state in data['objects'][epic]) {
           var series = state_to_series[state];
           if (series === undefined)
             series = 1;
-          chart.series[series].addPoint([key, data['objects'][key][state]])
+          points[series] += data['objects'][epic][state];
         }
+        $(points).each(function (i, el) {
+          chart.series[i].addPoint([epic, el])
+        });
       }
     });
-    // series[#typeofstory].addPoint([#epic, #story])
-//    chart.series[0].addPoint([0, 1])
-//    chart.series[1].addPoint([0, 2])
-//    chart.series[0].addPoint([1, 10])
-
   });
 });
