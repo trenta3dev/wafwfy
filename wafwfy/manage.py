@@ -19,20 +19,6 @@ def celery():
 @manager.command
 def fetch_stories():
     from wafwfy.tasks import fetch_stories
-
-    fetch_stories()
-
-
-@manager.command
-def flush_redis():
-    from wafwfy import redis
-
-    redis.flushdb()
-
-
-@manager.command
-def fetch_data():
-    flush_redis()
     fetch_stories()
 
 
