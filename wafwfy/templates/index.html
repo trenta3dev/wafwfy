@@ -22,7 +22,7 @@
 
     <script id="story-item" type="text/template">
         <div class="tile-text tile-magic">
-            <img src="/avatar/<%= owned_by %>" style="height: 55px !important" />
+            <img src="<% if(current_state ==='unstarted') { %>https://dl.dropbox.com/u/13479209/gufo.png<% } else { %>/avatar/<%= owned_by %><% } %>" style="height: 55px !important" />
             <h2><%= estimate %></h2>
         </div>
         <div class="tile-text tile-animation" style="min-height: 140px; max-height: 140px; overflow: hidden;">
