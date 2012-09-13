@@ -17,7 +17,7 @@ def index():
     today = datetime.now()
 
     return render_template('index.html',
-        epics=['one', 'two'],
+        epics=app.config.get('EPICS').keys(),
         day=today.day,
         month=today.strftime("%B"),
         velocity=Iteration.get_current_velocity(),
@@ -76,16 +76,26 @@ def tags():
     return jsonify(objects=tags)
 
 
-@app.route('/api/tags-count/')
+@app.route('/api/epics/')
 def tags_count():
     from wafwfy.models import Story
     from collections import defaultdict
 
     stories = Story.all()
+
+    # build a mapping tag -> id of the epic
+    epics = app.config.get('EPICS')
+    tag_to_id = {}
+    for cnt, epic_label in enumerate(epics):
+        for tag in epics[epic_label]:
+            tag_to_id[tag] = cnt
+
     tags = defaultdict(lambda:defaultdict(lambda: 0))
     for story in stories:
         for label in story.get('labels', []):
-            tags[label][story['current_state']] += 1
+            if label not in tag_to_id:
+                continue
+            tags[tag_to_id[label]][story['current_state']] += 1
     return jsonify(objects=tags)
 
 

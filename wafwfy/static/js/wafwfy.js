@@ -341,11 +341,26 @@ $(function () {
       ]
     });
 
-    console.log(c = chart)
+    // anything not in this is supposed to be 1.
+    var state_to_series = {
+      'unscheduled': 0,
+      'finished': 2
+    };
+    $.get('/api/epics/').done(function(data) {
+      for (var key in data['objects']) {
+        for (var state in data['objects'][key]) {
+          console.log(key, state, data['objects'][key][state]);
+          var series = state_to_series[state];
+          if (series === undefined)
+            series = 1;
+          chart.series[series].addPoint([key, data['objects'][key][state]])
+        }
+      }
+    });
     // series[#typeofstory].addPoint([#epic, #story])
-    chart.series[0].addPoint([0, 1])
-    chart.series[1].addPoint([0, 2])
-    chart.series[0].addPoint([1, 10])
+//    chart.series[0].addPoint([0, 1])
+//    chart.series[1].addPoint([0, 2])
+//    chart.series[0].addPoint([1, 10])
 
   });
 });

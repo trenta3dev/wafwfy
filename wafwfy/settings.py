@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 
 class DefaultSettings:
     DEBUG = True
@@ -23,3 +25,10 @@ class DefaultSettings:
         "Davide Setti": "davide.setti@gmail.com",
         "Michele Di Cosmo": "micheledicosmo@gmail.com",
     }
+
+    EPICS = OrderedDict([
+        ('FC-Flag', ['fc_flag']),
+        ('FC-Stream', ['fc_stream']),
+        ('wafwfy', ['wafwfy']),
+        ('Progetto corriere.it', ['corriere']),
+    ])
