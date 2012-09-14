@@ -63,7 +63,7 @@
 </head>
 <body>
 <script type="text/javascript">
-    var epics = [{% for epic in epics %} {% if loop.index > 1 %},{% endif %} '{{ epic }}' {% endfor %}];
+    window.epics = [{% for epic in epics %} {% if loop.index > 1 %},{% endif %} '{{ epic }}' {% endfor %}];
 </script>
 
 <div class="metro" id="about">

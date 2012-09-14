@@ -23,30 +23,6 @@ $(function () {
     }
   });
 
-  var StoryList = Backbone.Collection.extend({
-    model: Story,
-    url: "/api/story/",
-    allStates: ['unscheduled', 'accepted', 'unstarted', 'delivered', 'started', 'finished', 'rejected'],
-    parse: function (json) {
-      return json.objects;
-    },
-
-    getStoryByType: function (type) {
-      return this.where({current_state: type})
-    },
-
-    filterByState: function (type) {
-      var filteredStories = this.getStoryByType(type);
-      _.each(filteredStories, function (story) {
-        story.attributes.show = !story.attributes.show;
-      });
-    },
-
-    getCountByState: function (type) {
-      return this.getStoryByType(type).length;
-    }
-  });
-
   var CurrentStoryList = Backbone.Collection.extend({
     model: Story,
     url: "/api/current/",
@@ -54,7 +30,7 @@ $(function () {
       return json.objects;
     },
     getStoryByType: function (type) {
-      return this.where({story_type: type})
+      return this.where({story_type: type});
     }
   });
 
@@ -71,35 +47,6 @@ $(function () {
       if (!model_json.show)
         $(this.el).hide();
       return this;
-    }
-  });
-
-  var StoryListView = Backbone.View.extend({
-    el: $('#current>ul'),
-    events: {
-      'click button.story-switch': 'handleStatus'
-    },
-
-    initialize: function () {
-      var self = this;
-      this.stories = new CurrentStoryList();
-      this.stories.fetch({success: function () {
-        self.render();
-      }});
-      _.bindAll(this, 'handleStatus');
-    },
-
-    render: function () {
-      var $el = $(this.el);
-      _.each(this.stories.allStates, function (state) {
-        $('button.' + state).html(state + ' - ' + this.stories.getCountByState(state));
-      }, this);
-
-//      $el.find('tbody').html('');
-      _.each(this.stories.models, function (story) {
-        $el.append(new StoryView({model: story}).render().el);
-      }, this);
-
     }
   });
 
@@ -132,7 +79,6 @@ $(function () {
       var $el = $(this.el)
         , featured = this.stories.getStoryByType('feature')
         , modelLength = Math.floor(featured.length / 3)
-        , length
         , arrayFull = []
         , array
         , shuffle = function (array) {
@@ -148,12 +94,11 @@ $(function () {
           return array;
         };
 
-
       _.each(featured, function (story, i) {
         var $element = new StoryView({model: story}).render().el;
         $el.append($element);
 
-        if (i % modelLength == 0 && i > 0)
+        if (i % modelLength === 0 && i > 0)
           $el.append($('<br>'));
 
         arrayFull.push($element);
@@ -176,95 +121,39 @@ $(function () {
     }
   });
 
-
-  // generic widget, extend this and customize render
-  // with right model
-  var GenericWidget = Backbone.View.extend({
-    tagName: 'li',
-    sizeX: 1,
-    sizeY: 1,
-    row: 1,
-    col: 1
-  });
-
-  var EpicsWidget = GenericWidget.extend({
-    render: function () {
-      $(this.el).html('Epics');
-      return this;
-    }
-  });
-
-  var GridsterWafwfyApp = Backbone.View.extend({
-    el: $(".gridster ul"),
-    widgets: [
-      EpicsWidget
-    ],
-    gridster: null,
+  var EpicsWidget = Backbone.View.extend({
     initialize: function () {
-      this.gridster = $(this.el).gridster({
-        widget_margins: [10, 10],
-        widget_base_dimensions: [140, 140]
-      }).data('gridster');
       this.render();
     },
     render: function () {
-      _.each(this.widgets, function (Widget) {
-        var widget = new Widget();
-        this.gridster.add_widget(widget.render().el,
-          widget.sizeX, widget.sizeY);
-      }, this)
-    }
-  });
-
-  var MetroUIWafwfyApp = Backbone.View.extend({
-    el: $(".gridster ul"),
-    widgets: [
-      EpicsWidget
-    ],
-    gridster: null,
-    initialize: function () {
-      $("body").metroUI();
-      this.render();
-    },
-    render: function () {
-      _.each(this.widgets, function (Widget) {
-//        var widget = new Widget();
-//        this.gridster.add_widget(widget.render().el,
-//          widget.sizeX, widget.sizeY);
-      }, this)
-    }
-  });
-
-  window.wafwfyApp = new MetroUIWafwfyApp;
-  window.currentStoryList = new CurrentStoryListView;
-});
-
-$(function () {
-  var chart;
-  $(document).ready(function () {
-    $.get('/api/velocity/last/5/').done(function (data) {
-      new Highcharts.Chart({
+      var chart = new Highcharts.Chart({
         chart: {
-          renderTo: 'velocity-chart',
-          type: 'column',
-          margin: [ 0, 0, 0, 0],
-          backgroundColor: 'transparent'
+          renderTo: 'tags-chart',
+          type: 'bar',
+          margin: [ 0, 0, 0, 150],
+          backgroundColor: 'transparent',
+          borderColor: 'transparent'
         },
         colors: [
-          '#ffffff'
+          '#44a3aa',
+          '#e3a21a',
+          '#99b433'
         ],
         title: {
           text: null
         },
         xAxis: {
+          categories: window.epics,
+          gridLineColor: 'transparent',
           labels: {
-            enabled: false
+            style: {
+              color: '#FFFFFF',
+              'font-weight': 'bold'
+            }
           }
         },
         yAxis: {
-          labels: {
-            enabled: false
-          },
+          min: 0,
           gridLineColor: 'transparent'
         },
         legend: {
@@ -273,107 +162,130 @@ $(function () {
         tooltip: {
           enabled: false
         },
-        series: [
-          {
-            name: 'Velocity',
-            data: data.object
-          }
-        ],
-        credits: {
-          enabled: false
-        }
-      });
-    });
-
-
-    chart = new Highcharts.Chart({
-      chart: {
-        renderTo: 'tags-chart',
-        type: 'bar',
-        margin: [ 0, 0, 0, 150],
-        backgroundColor: 'transparent',
-        borderColor: 'transparent'
-      },
-      colors: [
-        '#44a3aa',
-        '#e3a21a',
-        '#99b433'
-      ],
-      title: {
-        text: null
-      },
-      xAxis: {
-        categories: epics,
-        gridLineColor: 'transparent',
-        labels: {
-          style: {
-            color: '#FFFFFF',
-            'font-weight': 'bold'
-          }
-        }
-      },
-      yAxis: {
-        min: 0,
-        gridLineColor: 'transparent'
-      },
-      legend: {
-        enabled: false
-      },
-      tooltip: {
-        enabled: false
-      },
-      plotOptions: {
-        series: {
-          stacking: 'normal'
-        },
-        bar: {
-//          borderColor: 'transparent'
-          dataLabels: {
-            style: {
-              color: '#FFFFFF',
-              'font-weight': 'bold'
+        plotOptions: {
+          series: {
+            stacking: 'normal'
+          },
+          bar: {
+            dataLabels: {
+              style: {
+                color: '#FFFFFF',
+                'font-weight': 'bold'
+              }
             }
           }
-        }
-      },
-      credits: {
-        enabled: false
-      },
-      series: [
-        {
-          name: 'unscheduled',
-          data: []
         },
-        {
-          name: 'scheduled',
-          data: []
+        credits: {
+          enabled: false
         },
-        {
-          name: 'finished',
-          data: []
-        }
-      ]
-    });
+        series: [
+          {
+            name: 'unscheduled',
+            data: []
+          },
+          {
+            name: 'scheduled',
+            data: []
+          },
+          {
+            name: 'finished',
+            data: []
+          }
+        ]
+      });
 
-    // anything not in this is supposed to be 1.
-    var state_to_series = {
-      'unscheduled': 0,
-      'accepted': 2
-    };
-    $.get('/api/epics/').done(function (data) {
-      var points;
-      for (var epic in data['objects']) {
-        points = [0, 0, 0];
-        for (var state in data['objects'][epic]) {
-          var series = state_to_series[state];
-          if (series === undefined)
-            series = 1;
-          points[series] += data['objects'][epic][state];
-        }
-        $(points).each(function (i, el) {
-          chart.series[i].addPoint([epic, el])
+      // anything not in this is supposed to be 1.
+      var state_to_series = {
+        'unscheduled': 0,
+        'accepted': 2
+      };
+
+      $.get('/api/epics/').done(function (data) {
+        var points;
+        $.each(data.objects, function (epic) {
+          points = [0, 0, 0];
+          $.each(data.objects[epic], function (state) {
+            var series = state_to_series[state];
+            if (series === undefined)
+              series = 1;
+            points[series] += data.objects[epic][state];
+          });
+          $(points).each(function (i, el) {
+            chart.series[i].addPoint([epic, el]);
+          });
         });
-      }
-    });
+      });
+      return this;
+    }
   });
+
+  var VelocityChartWidget = Backbone.View.extend({
+    initialize: function () {
+      this.render();
+    },
+    render: function () {
+      $.get('/api/velocity/last/5/').done(function (data) {
+        new Highcharts.Chart({
+          chart: {
+            renderTo: 'velocity-chart',
+            type: 'column',
+            margin: [ 0, 0, 0, 0],
+            backgroundColor: 'transparent'
+          },
+          colors: [
+            '#ffffff'
+          ],
+          title: {
+            text: null
+          },
+          xAxis: {
+            labels: {
+              enabled: false
+            }
+          },
+          yAxis: {
+            labels: {
+              enabled: false
+            },
+            gridLineColor: 'transparent'
+          },
+          legend: {
+            enabled: false
+          },
+          tooltip: {
+            enabled: false
+          },
+          series: [
+            {
+              name: 'Velocity',
+              data: data.object
+            }
+          ],
+          credits: {
+            enabled: false
+          }
+        });
+      });
+    }
+  });
+
+  var MetroUIWafwfyApp = Backbone.View.extend({
+    el: $(".gridster ul"),
+    widgets: [
+      CurrentStoryListView,
+      EpicsWidget,
+      VelocityChartWidget
+    ],
+    initialize: function () {
+      $("body").metroUI();
+      this.render();
+    },
+    render: function () {
+      _.each(this.widgets, function (Widget) {
+        new Widget();
+      }, this);
+    }
+  });
+
+  window.wafwfyApp = new MetroUIWafwfyApp();
 });
