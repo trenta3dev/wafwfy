@@ -277,7 +277,6 @@ $(function () {
       VelocityChartWidget
     ],
     initialize: function () {
-      $("body").metroUI();
       this.render();
     },
     render: function () {
