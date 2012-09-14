@@ -46,6 +46,7 @@ $(function () {
 
       if (!model_json.show)
         $(this.el).hide();
+
       return this;
     }
   });
@@ -55,7 +56,6 @@ $(function () {
     events: {
       'click button.story-switch': 'handleStatus'
     },
-
     initialize: function () {
       var self = this;
       this.stories = new CurrentStoryList();
@@ -64,17 +64,18 @@ $(function () {
       }});
       _.bindAll(this, 'handleStatus');
     },
-
     handleStatus: function (ev) {
       var button = $(ev.target);
+
       this.stories.filterByState(button.attr('data-type'));
+
       if (button.hasClass("on"))
         button.removeClass("on").addClass("off");
       else
         button.removeClass("off").addClass("on");
+
       this.render();
     },
-
     render: function () {
       var $el = $(this.el)
         , featured = this.stories.getStoryByType('feature')
@@ -118,6 +119,9 @@ $(function () {
           array = shuffle(arrayFull.slice(0));
 
       }, 2000);
+
+      window.wafwfyApp.trigger('widgetRendered');
+      return this;
     }
   });
 
@@ -215,6 +219,8 @@ $(function () {
           });
         });
       });
+
+      window.wafwfyApp.trigger('widgetRendered');
       return this;
     }
   });
@@ -266,25 +272,55 @@ $(function () {
           }
         });
       });
+
+      window.wafwfyApp.trigger('widgetRendered');
+      return this;
     }
   });
 
   var MetroUIWafwfyApp = Backbone.View.extend({
     el: $(".gridster ul"),
+    arrayPositionLeft: [],
+    leftBase: 0,
     widgets: [
       CurrentStoryListView,
       EpicsWidget,
       VelocityChartWidget
     ],
     initialize: function () {
-      this.render();
+      this.on('widgetRendered', this.updateWidgetOffSet, this);
+      this.move();
+      return this;
+    },
+    updateWidgetOffSet: function () {
+      var self = this;
+      self.arrayPositionLeft = [];
+
+      $('.metro-section').each(function () {
+        self.leftBase = $('.metro-sections').offset().left;
+        self.arrayPositionLeft.push($(this).offset().left - self.leftBase);
+      });
+    },
+    move: function () {
+      var currentPosition = 0
+        , self = this;
+
+      setInterval(function () {
+        currentPosition++;
+        if (currentPosition > self.arrayPositionLeft.length - 2)
+          currentPosition = 0;
+
+        $('.metro-sections').animate({'left': -self.arrayPositionLeft[currentPosition]}, 1000)
+      }, 5000);
     },
     render: function () {
       _.each(this.widgets, function (Widget) {
         new Widget();
       }, this);
+      return this;
     }
   });
 
   window.wafwfyApp = new MetroUIWafwfyApp();
+  window.wafwfyApp.render();
 });

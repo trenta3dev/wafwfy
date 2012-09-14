@@ -13,9 +13,6 @@
     <script src="/static/js/underscore-min.js"></script>
 	<script src="/static/js/backbone-min.js"></script>
 
-	<!--<script src="/static/js/jquery.mousewheel.min.js"></script>-->
-	<!--<script src="/static/js/metroui.js"></script>-->
-
 	<script src="/static/js/wafwfy.js"></script>
 	<script src="/static/js/highcharts.js"></script>
 
@@ -29,36 +26,6 @@
         </div>
     </script>
 
-    <script id="single-box" type="text/template">
-        <li data-row="<%= data-row %>" data-col="<%= data-col %>"
-            data-sizex="<%= data-sizex %>" data-sizey="<%= data-sizey %>">
-            <%= content %>
-        </li>
-    </script>
-
-    <style type="text/css">
-        button.off {
-            opacity: 0.5;
-        }
-        td.unscheduled, button.unscheduled {
-            color: DodgerBlue;
-        }
-        td.accepted, button.accepted  {
-            color: LimeGreen;
-        }
-        td.unstarted, button.unstarted {
-            color: LightCoral;
-        }
-        td.delivered, button.delivered {
-            color: Orange;
-        }
-        td.started, button.started {
-            color: MediumVioletRed;
-        }
-        td.finished, button.finished {
-            color: Peru;
-        }
-    </style>
 </head>
 <body>
 <script type="text/javascript">
@@ -67,170 +34,73 @@
 
 <div class="metro" id="about">
     <div class="layout">
-        <!-- Header -->
+
         <div class="header" id="header">
             <div class="dropdown-container clearfix">
-                <a class="dropdown-toggle">
-                    <h1>wafwfy</h1>
-                </a>
+                <h1>wafwfy</h1>
             </div>
         </div>
-
 
         <!-- Scrollable content -->
         <div id="scroll" class="metro-scroll">
             <div class="content clearfix" id="content">
                 <div class="metro-sections" style="margin-top: -50px;">
-
-                <div class="metro-section size3" id="section3">
-                    <h2>General Stuff</h2>
-                    <div class="tile tile-double-vertical bg-color-blueDark tile-text">
-                        <img id="gufo-ugolino" src="https://dl.dropbox.com/u/13479209/gufo.png" />
-                        <div class="tile-header white text-right" style="padding-top: 20px;">
-                            Velocity Chart
-                        </div>
-                    </div>
-                    <div class="tile tile-double bg-color-darken">
-                        <div class="tile-calendar-event position-relative">
-                            <div class="event-date">
-                                <div class="event-date-num">{{ day }}</div>
-                                <div class="event-date-month">{{ month }}</div>
-                            </div>
-                            <div id="wafwfy-title" class="event-data">
-                                <div class="title">We are
-                                    <span>f¿!#ing</span>
-                                    working for you</div>
-                               <div id="fortunately" class="title">
-                                   fortunately
-                               </div>
+                    <div class="metro-section size3" id="section3">
+                        <h2>General Stuff</h2>
+                        <div class="tile tile-double-vertical bg-color-blueDark tile-text">
+                            <img id="gufo-ugolino" src="https://dl.dropbox.com/u/13479209/gufo.png" />
+                            <div class="tile-header white text-right" style="padding-top: 20px;">
+                                Velocity Chart
                             </div>
                         </div>
-                    </div>
-                    <div class="tile tile-double bg-color-greenLight">
-                        <div class="tile-text">
-                        <div id="velocity-chart" class="position-absolute" style="width: 310px; height: 150px;">
-                        </div>
-                        </div>
-                    </div>
-                    <div class="tile bg-color-red">
-                        <div class="tile-calendar-event">
-                            <div class="event-date">
-                                <div class="event-date-num">{{ velocity }}</div>
+                        <div class="tile tile-double bg-color-darken">
+                            <div class="tile-calendar-event position-relative">
+                                <div class="event-date">
+                                    <div class="event-date-num">{{ day }}</div>
+                                    <div class="event-date-month">{{ month }}</div>
+                                </div>
+                                <div id="wafwfy-title" class="event-data">
+                                    <div class="title">We are
+                                        <span>f¿!#ing</span>
+                                        working for you</div>
+                                   <div id="fortunately" class="title">
+                                       fortunately
+                                   </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="tile-label">Velocity</div>
+                        <div class="tile tile-double bg-color-greenLight">
+                            <div class="tile-text">
+                            <div id="velocity-chart" class="position-absolute" style="width: 310px; height: 150px;">
+                            </div>
+                            </div>
+                        </div>
+                        <div class="tile bg-color-red">
+                            <div class="tile-calendar-event">
+                                <div class="event-date">
+                                    <div class="event-date-num">{{ velocity }}</div>
+                                </div>
+                            </div>
+                            <div class="tile-label">Velocity</div>
+                        </div>
+                        <div class="tile">
+                        </div>
+                        <div class="tile bg-color-orange">
+                        </div>
                     </div>
-                    <div class="tile">
+
+                    <div class="metro-section width-auto" id="current">
+                        <h2>Sprint Backlog
+                            <span class="color-legend bg-color-white"></span>
+                            <span class="color-legend bg-color-blue"></span>
+                            <span class="color-legend bg-color-blueDark"></span>
+                            <span class="color-legend bg-color-orange"></span>
+                            <span class="color-legend bg-color-green position-relative overflow-hidden">
+                                <span class="color-legend bg-color-red half-color"></span>
+                            </span>
+                        </h2>
+                        <div></div>
                     </div>
-                    <div class="tile bg-color-orange">
-                    </div>
-                </div>
-
-
-                <div class="metro-section width-auto" id="current">
-                    <h2>Sprint Backlog
-                        <span class="color-legend bg-color-white"></span>
-                        <span class="color-legend bg-color-blue"></span>
-                        <span class="color-legend bg-color-blueDark"></span>
-                        <span class="color-legend bg-color-orange"></span>
-                        <span class="color-legend bg-color-green position-relative overflow-hidden">
-                            <span class="color-legend bg-color-red half-color"></span>
-                        </span>
-                    </h2>
-                    <div></div>
-                </div>
-
-                    <!--<div class="metro-section size3" id="section1">-->
-                        <!--<h2>Section Title<small>subtitle</small></h2>-->
-                        <!--<div class="tile">-->
-                        <!--</div>-->
-                        <!--<div class="tile bg-color-orange">-->
-                            <!--<div class="tile-icon-large">-->
-                                <!--<img src="img/maps-128.png"/>-->
-                            <!--</div>-->
-                            <!--<div class="tile-label">Maps</div>-->
-                        <!--</div>-->
-                        <!--<div class="tile bg-color-red">-->
-                            <!--<div class="tile-icon-large">-->
-                                <!--<img src="img/mail-128.png"/>-->
-                            <!--</div>-->
-                            <!--<div class="tile-label">Mail</div>-->
-                            <!--<div class="tile-counter">10</div>-->
-                        <!--</div>-->
-                        <!--<div class="tile bg-color-greenDark">-->
-                            <!--<div class="tile-header">Remote Desktop</div>-->
-                            <!--<div class="tile-icon">-->
-                                <!--<img src="img/desktop-128.png"/>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        <!--<div class="tile tile-double">-->
-                            <!--<div class="tile-icon-large">-->
-                                <!--<img src="img/market-128.png"/>-->
-                            <!--</div>-->
-                            <!--<div class="tile-label">Market</div>-->
-                        <!--</div>-->
-
-
-                        <!--<div class="tile tile-double bg-color-orange">-->
-                            <!--<div class="tile-image-slider">-->
-                                <!--<img src="img/1.jpg"/>-->
-                                <!--<img src="img/2.jpg"/>-->
-                                <!--<img src="img/3.jpg"/>-->
-                                <!--<img src="img/4.jpg"/>-->
-                                <!--<img src="img/5.jpg"/>-->
-                            <!--</div>-->
-                        <!--</div>-->
-
-
-                        <!--<div class="tile bg-color-darken">-->
-                            <!--<div class="tile-caption">XBOX Live!</div>-->
-                            <!--<div class="tile-icon-cover">-->
-                                <!--<img src="img/joystick-128.png"/>-->
-                            <!--</div>-->
-                            <!--<div class="tile-label">Games</div>-->
-                            <!--<div class="tile-counter">5</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-
-                    <!--<div class="metro-section size3" id="section2">-->
-                        <!--<h2>Media<small>photos, videos, ...</small></h2>-->
-                        <!--<div class="tile tile-double">-->
-                            <!--<div class="">-->
-                                <!--<iframe width="310" height="174" src="http://www.youtube.com/embed/aO2DAVQYauQ?rel=0" frameborder="0" allowfullscreen></iframe>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        <!--<a href="http://www.youtube.com" class="tile bg-color-darken">-->
-                            <!--<div class="tile-icon-large">-->
-                                <!--<img src="img/YouTube-128.png" />-->
-                            <!--</div>-->
-                        <!--</a>-->
-                        <!--<div class="tile">-->
-                            <!--<div class="tile-icon-large">-->
-                                <!--<img src="img/film-128.png" />-->
-                            <!--</div>-->
-                            <!--<div class="tile-label">Films</div>-->
-                            <!--<div class="tile-counter">25</div>-->
-                        <!--</div>-->
-                        <!--<div class="tile bg-color-pink">-->
-                            <!--<div class="tile-icon-large">-->
-                                <!--<img src="img/photo-128.png" />-->
-                            <!--</div>-->
-                            <!--<div class="tile-label">Photos</div>-->
-                            <!--<div class="tile-counter">121</div>-->
-                        <!--</div>-->
-                        <!--<div class="tile bg-color-yellow">-->
-                            <!--<div class="tile-icon-large">-->
-                                <!--<img src="img/book-128.png" />-->
-                            <!--</div>-->
-                            <!--<div class="tile-label">E-Books</div>-->
-                            <!--<div class="tile-counter">36</div>-->
-                        <!--</div>-->
-                        <!--<div class="tile tile-triple bg-color-white">-->
-                        <!--</div>-->
-                    <!--</div>-->
-
-
-
 
                     <div class="metro-section size4">
                         <h2>Epics chart</h2>
@@ -243,158 +113,68 @@
                     </div>
 
                     <div class="metro-section size3">
-                        <h2>Commit</h2>
-                        <ul class="metro-replies">
-                            <li class="metro-reply bg-color-blue">
-                                <div class="avatar"><img src="https://secure.gravatar.com/avatar/89a92f7bfd81cb52ecbbc6160710d691?s=140&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" /></div>
-                                <div class="reply">
-                                    <div class="date">01.01.2012</div>
-                                    <div class="author">armisael</div>
-                                    <div class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut nisi dolor, eget luctus lectus.</div>
-                                </div>
-                            </li>
-                            <li class="metro-reply bg-color-red">
-                                <div class="avatar"><img src="https://secure.gravatar.com/avatar/b96b85956f77049965e50714e6e87f77?s=140&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" /></div>
-                                <div class="reply">
-                                    <div class="date">01.01.2012</div>
-                                    <div class="author">vad</div>
-                                    <div class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut nisi dolor, eget luctus lectus.</div>
-                                </div>
-                            </li>
-                            <li class="metro-reply bg-color-yellow">
-                                <div class="avatar"><img src="https://secure.gravatar.com/avatar/79bc4d28de5dcc3cd5e7f53209d7dae9?s=140&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" /></div>
-                                <div class="reply">
-                                    <div class="date">01.01.2012</div>
-                                    <div class="author">micheledicosmo</div>
-                                    <div class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut nisi dolor, eget luctus lectus.</div>
-                                </div>
-                            </li>
-                            <li class="metro-reply bg-color-green">
-                                <div class="avatar"><img src="https://secure.gravatar.com/avatar/cfbc2d3c4cd89a07943a3979c87280e2?s=140&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" /></div>
-                                <div class="reply">
-                                    <div class="date">01.01.2012</div>
-                                    <div class="author">nostalgiaz</div>
-                                    <div class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut nisi dolor, eget luctus lectus.</div>
-                                </div>
-                            </li>
-                            <li class="metro-reply bg-color-orange">
-                                <div class="avatar"><img src="https://secure.gravatar.com/avatar/6ca6ce18f1fc1747e54a45d9d5cb4515?s=140&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" /></div>
-                                <div class="reply">
-                                    <div class="date">01.01.2012</div>
-                                    <div class="author">martino</div>
-                                    <div class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut nisi dolor, eget luctus lectus.</div>
-                                </div>
-                            </li>
-                        </ul>
+                        <h2>&nbsp;</h2>
+                        <div class="tile tile-triple" style="background: transparent !important;">
+                        </div>
+                        <div class="tile bg-color-red tile-text-center">
+                            <em>...and the</em>
+                        </div>
+                        <div class="tile tile-text-center">
+                            <em>best is yet</em>
+                        </div>
+                        <div class="tile bg-color-orange tile-text-center">
+                            <em>to come...</em>
+                        </div>
                     </div>
 
-                    <div class="metro-section size3">
-                        <h2>Commit with stickers</h2>
-                        <ul class="metro-replies">
-                            <li class="metro-reply bg-color-blue">
-                                <b class="sticker sticker-left sticker-color-blue"></b>
-                                <div class="avatar"><img src="https://secure.gravatar.com/avatar/89a92f7bfd81cb52ecbbc6160710d691?s=140&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" /></div>
-                                <div class="reply">
-                                    <div class="date">01.01.2012</div>
-                                    <div class="author">armisael</div>
-                                    <div class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut nisi dolor, eget luctus lectus.</div>
-                                </div>
-                            </li>
-                            <li class="metro-reply bg-color-red">
-                                <b class="sticker sticker-right sticker-color-red"></b>
-                                <div class="avatar"><img src="https://secure.gravatar.com/avatar/b96b85956f77049965e50714e6e87f77?s=140&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" /></div>
-                                <div class="reply">
-                                    <div class="date">01.01.2012</div>
-                                    <div class="author">vad</div>
-                                    <div class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut nisi dolor, eget luctus lectus.</div>
-                                </div>
-                            </li>
-                            <li class="metro-reply bg-color-yellow">
-                                <b class="sticker sticker-right sticker-color-yellow"></b>
-                                <div class="avatar"><img src="https://secure.gravatar.com/avatar/79bc4d28de5dcc3cd5e7f53209d7dae9?s=140&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" /></div>
-                                <div class="reply">
-                                    <div class="date">01.01.2012</div>
-                                    <div class="author">micheledicosmo</div>
-                                    <div class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut nisi dolor, eget luctus lectus.</div>
-                                </div>
-                            </li>
-                            <li class="metro-reply bg-color-green">
-                                <b class="sticker sticker-left sticker-color-green"></b>
-                                <div class="avatar"><img src="https://secure.gravatar.com/avatar/cfbc2d3c4cd89a07943a3979c87280e2?s=140&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" /></div>
-                                <div class="reply">
-                                    <div class="date">01.01.2012</div>
-                                    <div class="author">nostalgiaz</div>
-                                    <div class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut nisi dolor, eget luctus lectus.</div>
-                                </div>
-                            </li>
-                            <li class="metro-reply bg-color-orange">
-                                <b class="sticker sticker-left sticker-color-orange"></b>
-
-                                <div class="avatar"><img src="https://secure.gravatar.com/avatar/6ca6ce18f1fc1747e54a45d9d5cb4515?s=140&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" /></div>
-                                <div class="reply">
-                                    <div class="date">01.01.2012</div>
-                                    <div class="author">martino</div>
-                                    <div class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut nisi dolor, eget luctus lectus.</div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-
-
+                    <!--<div class="metro-section size3">-->
+                        <!--<h2>Commit</h2>-->
+                        <!--<ul class="metro-replies">-->
+                            <!--<li class="metro-reply bg-color-blue">-->
+                                <!--<div class="avatar"><img src="https://secure.gravatar.com/avatar/89a92f7bfd81cb52ecbbc6160710d691?s=140&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" /></div>-->
+                                <!--<div class="reply">-->
+                                    <!--<div class="date">01.01.2012</div>-->
+                                    <!--<div class="author">armisael</div>-->
+                                    <!--<div class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut nisi dolor, eget luctus lectus.</div>-->
+                                <!--</div>-->
+                            <!--</li>-->
+                            <!--<li class="metro-reply bg-color-red">-->
+                                <!--<div class="avatar"><img src="https://secure.gravatar.com/avatar/b96b85956f77049965e50714e6e87f77?s=140&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" /></div>-->
+                                <!--<div class="reply">-->
+                                    <!--<div class="date">01.01.2012</div>-->
+                                    <!--<div class="author">vad</div>-->
+                                    <!--<div class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut nisi dolor, eget luctus lectus.</div>-->
+                                <!--</div>-->
+                            <!--</li>-->
+                            <!--<li class="metro-reply bg-color-yellow">-->
+                                <!--<div class="avatar"><img src="https://secure.gravatar.com/avatar/79bc4d28de5dcc3cd5e7f53209d7dae9?s=140&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" /></div>-->
+                                <!--<div class="reply">-->
+                                    <!--<div class="date">01.01.2012</div>-->
+                                    <!--<div class="author">micheledicosmo</div>-->
+                                    <!--<div class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut nisi dolor, eget luctus lectus.</div>-->
+                                <!--</div>-->
+                            <!--</li>-->
+                            <!--<li class="metro-reply bg-color-green">-->
+                                <!--<div class="avatar"><img src="https://secure.gravatar.com/avatar/cfbc2d3c4cd89a07943a3979c87280e2?s=140&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" /></div>-->
+                                <!--<div class="reply">-->
+                                    <!--<div class="date">01.01.2012</div>-->
+                                    <!--<div class="author">nostalgiaz</div>-->
+                                    <!--<div class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut nisi dolor, eget luctus lectus.</div>-->
+                                <!--</div>-->
+                            <!--</li>-->
+                            <!--<li class="metro-reply bg-color-orange">-->
+                                <!--<div class="avatar"><img src="https://secure.gravatar.com/avatar/6ca6ce18f1fc1747e54a45d9d5cb4515?s=140&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" /></div>-->
+                                <!--<div class="reply">-->
+                                    <!--<div class="date">01.01.2012</div>-->
+                                    <!--<div class="author">martino</div>-->
+                                    <!--<div class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut nisi dolor, eget luctus lectus.</div>-->
+                                <!--</div>-->
+                            <!--</li>-->
+                        <!--</ul>-->
+                    <!--</div>-->
                 </div>
             </div>
         </div>
-
-
     </div>
-</div>
-<!--<h1>wafwfy</h1>-->
-<!--We are "fortunately" working for you-->
-
-
-
-    <!--<div class="gridster">-->
-        <!--<ul>-->
-            <!--<li data-row="1" data-col="1" data-sizex="3" data-sizey="2">-->
-                <!--<div id="tags-chart" style="width: 400px; height: 300px; margin: 0 auto; float:right;"></div>-->
-
-            <!--</li>-->
-            <!--<li data-row="2" data-col="1" data-sizex="1" data-sizey="1">Velocity:<strong style="display:block">18</strong></li>-->
-            <!--<li data-row="2" data-col="1" data-sizex="1" data-sizey="1"></li>-->
-            <!--<li data-row="2" data-col="1" data-sizex="1" data-sizey="1"></li>-->
-            <!--<li data-row="3" data-col="1" data-sizex="2" data-sizey="1">Last git commit:-->
-            <!--<dl>-->
-                <!--<dt>add highcharts and first dummy epics chart</dt>-->
-                <!--<dt>add current state info for each story grouped by tag in /api/tags-count/</dt>-->
-            <!--</dl></li>-->
-        <!--</ul>-->
-    <!--</div>-->
-
-
-    <!--<table id="story-table" class="table-striped">-->
-    <!--<thead>-->
-    <!--<tr>-->
-        <!--<td>-->
-            <!--<button class="story-switch unscheduled on" data-type="unscheduled">unscheduled</button>-->
-            <!--<button class="story-switch accepted on" data-type="accepted">accepted</button>-->
-            <!--<button class="story-switch unstarted on" data-type="unstarted">unstarted</button>-->
-            <!--<button class="story-switch delivered on" data-type="delivered">delivered</button>-->
-            <!--<button class="story-switch started on" data-type="started">started</button>-->
-            <!--<button class="story-switch finished on" data-type="finished">finished</button>-->
-        <!--</td>-->
-    <!--</tr>-->
-    <!--</thead>-->
-
-    <!--</table>-->
-
-    <!--<script type="text/javascript">-->
-        <!--$(function(){ //DOM Ready-->
-            <!--$(".gridster ul").gridster({-->
-                <!--widget_margins: [10, 10],-->
-                <!--widget_base_dimensions: [140, 140]-->
-            <!--});-->
-
-        <!--});-->
-    <!--</script>-->
 </body>
 </html>
