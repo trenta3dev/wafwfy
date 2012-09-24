@@ -1,3 +1,8 @@
+ANIMATION_DELAY = 15000;
+ANIMATION_SPEED = 1000;
+STORY_ANIMATION_DELAY = 3000;
+
+
 $(function () {
   var stateToColor = {
     'unscheduled': 'white',
@@ -118,7 +123,7 @@ $(function () {
         if (array.length === 0)
           array = shuffle(arrayFull.slice(0));
 
-      }, 2000);
+      }, STORY_ANIMATION_DELAY);
 
       window.wafwfyApp.trigger('widgetRendered');
       return this;
@@ -310,8 +315,8 @@ $(function () {
         if (currentPosition > self.arrayPositionLeft.length - 2)
           currentPosition = 0;
 
-        $('.metro-sections').animate({'left': -self.arrayPositionLeft[currentPosition]}, 1000)
-      }, 5000);
+        $('.metro-sections').animate({'left': -self.arrayPositionLeft[currentPosition]}, ANIMATION_SPEED)
+      }, ANIMATION_DELAY);
     },
     render: function () {
       _.each(this.widgets, function (Widget) {
