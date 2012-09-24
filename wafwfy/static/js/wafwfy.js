@@ -235,7 +235,7 @@ $(function () {
       this.render();
     },
     render: function () {
-      $.get('/api/velocity/last/5/').done(function (data) {
+      $.get('/api/velocity/last/10/').done(function (data) {
         new Highcharts.Chart({
           chart: {
             renderTo: 'velocity-chart',
