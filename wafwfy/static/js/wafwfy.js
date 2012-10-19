@@ -322,6 +322,14 @@ $(function () {
       _.each(this.widgets, function (Widget) {
         new Widget();
       }, this);
+
+      setTimeout(
+        function () {
+          document.location.reload(true);
+        },
+        30*60*1000
+      );
+
       return this;
     }
   });
