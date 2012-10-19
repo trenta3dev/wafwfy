@@ -32,7 +32,13 @@ class DefaultSettings:
 
     EPICS = OrderedDict([
         ('FC-Flag', ['fc_flag']),
+        ('FC-Personaggi', ['fc_personaggi']),
+        ('FC-Notifiche', ['fc_notifiche']),
+        ('FC-Up&Down', ['fc_updown']),
+        ('FC-Search', ['fc_search']),
+        ('FC-Facts', ['fc_facts']),
         ('FC-Stream', ['fc_stream']),
         ('wafwfy', ['wafwfy']),
         ('Progetto corriere.it', ['corriere']),
+        ('Timu', ['timu']),
     ])
