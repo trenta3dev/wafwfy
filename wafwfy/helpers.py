@@ -21,6 +21,12 @@ def str_to_date(a_string):
     )).replace(tzinfo=utc)
 
 
+def calculate_team_percentages(strength, n_members=5):
+    factor = 1. / n_members
+    return [min(factor, max(0, strength - factor * i)) / factor * 100
+            for i, x in enumerate(range(n_members))]
+
+
 class PivotalRequest(object):
     ROOT = "https://www.pivotaltracker.com/services/v3/"
 

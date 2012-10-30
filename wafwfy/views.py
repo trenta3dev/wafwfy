@@ -13,16 +13,19 @@ logger.setLevel(logging.INFO)
 def index():
     from datetime import datetime
     from wafwfy.models import Iteration
+    from wafwfy.helpers import calculate_team_percentages
 
     today = datetime.now()
     completed, total = Iteration.get_current_points()
+    strength = float(Iteration.get_current_strength())
+    team_percentages = calculate_team_percentages(strength)
 
     return render_template('index.html',
         epics=app.config.get('EPICS').keys(),
         day=today.day,
         month=today.strftime("%B"),
         velocity=Iteration.get_current_velocity(),
-        team_strength=Iteration.get_current_strength(),
+        team_strength=team_percentages,
         completed_points=completed,
         total_points=total,
     )
