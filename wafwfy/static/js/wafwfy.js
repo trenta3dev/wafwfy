@@ -310,13 +310,13 @@ $(function () {
       var currentPosition = 0
         , self = this;
 
-      setInterval(function () {
-        currentPosition++;
-        if (currentPosition > self.arrayPositionLeft.length - 2)
-          currentPosition = 0;
-
-        $('.metro-sections').animate({'left': -self.arrayPositionLeft[currentPosition]}, ANIMATION_SPEED)
-      }, ANIMATION_DELAY);
+//      setInterval(function () {
+//        currentPosition++;
+//        if (currentPosition > self.arrayPositionLeft.length - 2)
+//          currentPosition = 0;
+//
+//        $('.metro-sections').animate({'left': -self.arrayPositionLeft[currentPosition]}, ANIMATION_SPEED)
+//      }, ANIMATION_DELAY);
     },
     render: function () {
       _.each(this.widgets, function (Widget) {
