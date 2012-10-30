@@ -118,8 +118,6 @@ class Iteration(BaseRedisModel):
             pipe.execute()
 
     @classmethod
-    #TODO current velocity = avg(last #3 iteration)
-    #     iteration velocity = sum(
     def get_velocity_for_iteration(cls, iteration_id, with_team_strength=False):
         if iteration_id <= 0:
             return 0
@@ -149,6 +147,23 @@ class Iteration(BaseRedisModel):
             iteration_velocity += cls.get_velocity_for_iteration(current_iteration - i - 1, True)
 
         return iteration_velocity/3
+
+    @classmethod
+    def get_current_strength(cls):
+        current_iteration = cls.get_current()
+        iteration = Iteration.get(current_iteration)
+        return iteration.get('team_strength', '1.0')
+
+    @classmethod
+    def get_current_points(cls):
+        completed, total = 0, 0
+        for story in Story.current():
+            if story.get('story_type') != 'feature':
+                continue
+            total += story.get('estimate', 0)
+            if story.get('current_state') == 'accepted':
+                completed += story.get('estimate', 0)
+        return completed, total
 
     @classmethod
     def get_current(cls):

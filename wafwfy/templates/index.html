@@ -87,8 +87,21 @@
                             <div class="tile-label">Velocity</div>
                         </div>
                         <div class="tile">
+                            <div class="tile-calendar-event">
+                                <div class="event-date">
+                                    <div class="event-date-num">{{ team_strength }}</div>
+                                </div>
+                            </div>
+                            <div class="tile-label">Team Strength</div>
                         </div>
                         <div class="tile bg-color-orange">
+                            <div class="tile-calendar-event">
+                                <div class="event-date">
+                                    <span class="event-date-num">{{ completed_points }}</span>
+                                    <span class="event-date-month"> / {{ total_points }}</span>
+                                </div>
+                            </div>
+                            <div class="tile-label">Iteration Points</div>
                         </div>
                     </div>
 

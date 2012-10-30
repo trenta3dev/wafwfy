@@ -15,12 +15,16 @@ def index():
     from wafwfy.models import Iteration
 
     today = datetime.now()
+    completed, total = Iteration.get_current_points()
 
     return render_template('index.html',
         epics=app.config.get('EPICS').keys(),
         day=today.day,
         month=today.strftime("%B"),
         velocity=Iteration.get_current_velocity(),
+        team_strength=Iteration.get_current_strength(),
+        completed_points=completed,
+        total_points=total,
     )
 
 
