@@ -16,6 +16,7 @@ def index():
     from wafwfy.helpers import calculate_team_percentages
 
     today = datetime.now()
+    velocity = Iteration.get_current_velocity()
     completed, total = Iteration.get_current_points()
     strength = float(Iteration.get_current_strength())
     team_percentages = calculate_team_percentages(strength)
@@ -24,10 +25,10 @@ def index():
         epics=app.config.get('EPICS').keys(),
         day=today.day,
         month=today.strftime("%B"),
-        velocity=Iteration.get_current_velocity(),
+        velocity=velocity,
         team_strength=team_percentages,
         completed_points=completed,
-        total_points=total,
+        total_points=int(velocity * strength),
     )
 
 
