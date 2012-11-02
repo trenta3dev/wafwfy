@@ -1,4 +1,5 @@
 import logging
+import flask
 
 from flask import render_template, jsonify, redirect
 from wafwfy import app
@@ -117,3 +118,11 @@ def avatar(user):
     return redirect(
         "https://secure.gravatar.com/avatar/{0}".format(email)
     )
+
+
+@app.route('/stream')
+def stream():
+    """ SSE commands for each client
+    """
+    from  wafwfy.events import event_stream
+    return flask.Response(event_stream(), mimetype="text/event-stream")

@@ -18,7 +18,7 @@ class DefaultSettings:
         'fetch_stories': {
             'task': 'wafwfy.tasks.fetch_stories',
             'schedule': timedelta(minutes=60),
-            'args': ()
+            'args': (True, )
         },
     }
 

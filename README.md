@@ -7,9 +7,9 @@ we are "fortunately" working for you - a pivotaltracker monitor/dashboard to sho
 howto
 -----
 
-Run the server with (it will be available at http://localhost:7998 ):
+Run the server with (it will be available at http://localhost:8000 ):
      
-    python wafwfy/manage.py runserver
+    gunicorn --debug --worker-class=gevent -t 999999  wafwfy:app
 
 then run celery with:
      

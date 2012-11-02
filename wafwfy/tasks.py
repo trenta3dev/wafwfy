@@ -4,7 +4,7 @@ from wafwfy.models import Story, Iteration
 
 
 @celery_instance.task()
-def fetch_stories():
+def fetch_stories(refresh_clients=False):
     """
     fetch userstories from pivotaltracker and add some information
     into the database.
@@ -35,3 +35,7 @@ def fetch_stories():
         app.logger.info(story_id)
 
     pipe.execute()
+
+    if refresh_clients:
+        from wafwfy.events import refresh_clients as refresh_clients_fun
+        refresh_clients_fun()

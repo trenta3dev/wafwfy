@@ -19,7 +19,13 @@ def celery():
 @manager.command
 def fetch_stories():
     from wafwfy.tasks import fetch_stories
-    fetch_stories()
+    fetch_stories(refresh_clients=True)
+
+
+@manager.command
+def refresh_clients():
+    from wafwfy.events import refresh_clients
+    refresh_clients()
 
 
 manager.add_command('runserver',  Server(port=7998))

@@ -357,3 +357,18 @@ $(function () {
   window.wafwfyApp = new MetroUIWafwfyApp();
   window.wafwfyApp.render();
 });
+
+
+$(function() {
+  function sse() {
+      var source = new EventSource('/stream');
+      source.onmessage = function(e) {
+          // XSS in chat is fun
+        console.log(e.data)
+        if (e.data == 'refresh') {
+          document.location.reload(true);
+        }
+      };
+  }
+  sse();
+})

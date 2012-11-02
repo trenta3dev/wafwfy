@@ -35,7 +35,7 @@
 </head>
 <body>
 <script type="text/javascript">
-    window.epics = [{% for epic in epics %} {% if loop.index > 1 %},{% endif %} '{{ epic }}' {% endfor %}];
+    window.epics = [{% for epic in epics %} {% if loop.index > 1 %},{% endif %} '{{ epic|safe }}' {% endfor %}];
 </script>
 
 <div class="metro" id="about">
