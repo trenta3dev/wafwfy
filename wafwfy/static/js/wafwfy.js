@@ -2,6 +2,18 @@ ANIMATION_DELAY = 15000;
 ANIMATION_SPEED = 1000;
 STORY_ANIMATION_DELAY = 3000;
 
+var getParameterByName = function (name)
+{
+  name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+  var regexS = "[\\?&]" + name + "=?([^&#]*)";
+  var regex = new RegExp(regexS);
+  var results = regex.exec(window.location.search);
+  if(results == null)
+    return undefined;
+  else
+    return decodeURIComponent(results[1].replace(/\+/g, " "));
+};
+
 
 $(function () {
   var stateToColor = {
@@ -294,7 +306,15 @@ $(function () {
     ],
     initialize: function () {
       this.on('widgetRendered', this.updateWidgetOffSet, this);
-      this.move();
+
+      // is wafwfy animated?
+      if (getParameterByName("animated") !== undefined)
+        this.move();
+      else
+        $('.metro-scroll').mousewheel(function (event, delta) {
+          this.scrollLeft -= (delta * 30);
+        });
+
       return this;
     },
     updateWidgetOffSet: function () {
