@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta name="viewport" content="height=device-height">
+
+    <title>wafwfy</title>
+    <link rel="icon" href="https://dl.dropbox.com/u/13479209/fav.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="https://dl.dropbox.com/u/13479209/fav.ico" type="image/x-icon" />
+
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+
+    <link href="/static/css/metro.css" rel="stylesheet" />
+    <link href="/static/css/site.less" rel="stylesheet/less" type="text/css" >
+    <link href="/static/css/representative.css" rel="stylesheet" />
+
+    <script src="/static/js/less-1.3.0.min.js"></script>
+    <script src="/static/js/underscore-min.js"></script>
+	<script src="/static/js/backbone-min.js"></script>
+	<script src="/static/js/jquery.mousewheel.min.js"></script>
+
+	<script src="/static/js/wafwfy.js"></script>
+	<script src="/static/js/highcharts.js"></script>
+
+    <script id="story-item" type="text/template">
+        <div class="tile-text tile-magic">
+            <img src="<% if(current_state ==='unstarted') { %>https://dl.dropbox.com/u/13479209/gufo.png<% } else { %>/avatar/<%= owned_by %><% } %>" style="height: 55px !important" />
+            <h2><%= estimate %></h2>
+        </div>
+        <div class="tile-text tile-animation" style="min-height: 140px; max-height: 140px; overflow: hidden;">
+            <%= name %>
+        </div>
+    </script>
+
+</head>
+<body>
+<script type="text/javascript">
+    window.epics = [{% for epic in epics %} {% if loop.index > 1 %},{% endif %} '{{ epic|safe }}' {% endfor %}];
+</script>
+
+<div class="metro" id="about">
+    <div class="layout">
+
+        <div class="header" id="header">
+            <div class="dropdown-container clearfix">
+                <h1>wafwfy</h1>
+            </div>
+        </div>
+
+        <!-- Scrollable content -->
+        <div id="scroll" class="metro-scroll">
+            <div class="content clearfix" id="content">
+                <div class="metro-sections" style="margin-top: -50px;">
+                    <div class="metro-section size3" id="section3">
+                        <h2>General Stuff</h2>
+                        <div class="tile tile-double-vertical bg-color-blueDark tile-text">
+                            <img id="gufo-ugolino" src="https://dl.dropbox.com/u/13479209/gufo.png" />
+                            <div class="tile-header white text-right" style="padding-top: 20px;">
+                                Velocity Chart
+                            </div>
+                        </div>
+                        <div class="tile tile-double bg-color-darken">
+                            <div class="tile-calendar-event position-relative">
+                                <div class="event-date">
+                                    <div class="event-date-num">{{ day }}</div>
+                                    <div class="event-date-month">{{ month }}</div>
+                                </div>
+                                <div id="wafwfy-title" class="event-data">
+                                    <div class="title">We are
+                                        <span>f¿!#ing</span>
+                                        working for you</div>
+                                   <div id="fortunately" class="title">
+                                       fortunately
+                                   </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tile tile-double bg-color-greenLight">
+                            <div class="tile-text">
+                            <div id="velocity-chart" class="position-absolute" style="width: 310px; height: 150px;">
+                            </div>
+                            </div>
+                        </div>
+                        <div class="tile bg-color-red">
+                            <div class="tile-calendar-event">
+                                <div class="event-date">
+                                    <div class="event-date-num">{{ velocity }}</div>
+                                </div>
+                            </div>
+                            <div class="tile-label">Velocity</div>
+                        </div>
+                        <div class="tile">
+                            <div class="tile-calendar-event">
+                                <div class="strength-container">
+                                    {% for strength in team_strength %}
+                                        <span class="strength strength-hollow">
+                                            <span class="strength strength-full" style="height: {{ strength }}%; top: {{ 100-strength }}%"></span>
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="tile-label">Team Strength</div>
+                        </div>
+                        <div class="tile bg-color-orange">
+                            <div class="tile-calendar-event">
+                                <div class="event-date">
+                                    <span class="event-date-num">{{ completed_points }}</span>
+                                    <span class="event-date-month"> / {{ total_points }}</span>
+                                </div>
+                            </div>
+                            <div class="tile-label">Sprint Points</div>
+                        </div>
+                    </div>
+
+                    <div class="metro-section width-auto" id="current">
+                        <h2>Sprint Backlog
+                            <span class="color-legend bg-color-white"></span>
+                            <span class="color-legend bg-color-blue"></span>
+                            <span class="color-legend bg-color-blueDark"></span>
+                            <span class="color-legend bg-color-orange"></span>
+                            <span class="color-legend bg-color-green position-relative overflow-hidden">
+                                <span class="color-legend bg-color-red half-color"></span>
+                            </span>
+                        </h2>
+                        <div></div>
+                    </div>
+
+                    <div class="metro-section size4">
+                        <h2>Epics chart</h2>
+                        <div class="tile tile-quadro tile-triple-vertical bg-color-darken">
+                            <div class="tile-text">
+                                <div id="tags-chart" class="position-absolute" style="width: 630px; height: 470px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metro-section size3">
+                        <h2>&nbsp;</h2>
+                        <div class="tile tile-triple" style="background: transparent !important;">
+                        </div>
+                        <div class="tile bg-color-red tile-text-center">
+                            <em>...and the</em>
+                        </div>
+                        <div class="tile tile-text-center">
+                            <em>best is yet</em>
+                        </div>
+                        <div class="tile bg-color-orange tile-text-center">
+                            <em>to come...</em>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

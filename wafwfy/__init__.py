@@ -7,6 +7,10 @@ app.config.from_envvar('WAFWFY_CONF', silent=True)
 app.config.from_envvar('WAFWFY_EXTRA_CONF', silent=True)
 app.config.from_pyfile('settings_local.py', silent=True)
 
+app.config.setdefault('PIVOTAL_TOKEN', None)
+app.config.setdefault('PIVOTAL_PROJECT', None)
+
+
 if not app.debug and not app.testing:
     from raven.contrib.flask import Sentry
     sentry = Sentry(app)
@@ -27,13 +31,18 @@ if not app.debug and not app.testing:
     )
 
 
-if app.testing and 'SQLALCHEMY_DATABASE_URI_TEST' in app.config:
-    app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI_TEST']
+# redis
+from flask.ext.redis import Redis
+
+redis = Redis()
+redis.init_app(app)
 
 
-from wafwfy.database import db
+# set up celery
+from celery import Celery
+celery_instance = Celery('wafwfy')
+celery_instance.conf.add_defaults(app.config)
+import wafwfy.tasks
 
-db.app = app
-db.init_app(app)
-
+# set up views
 import wafwfy.views
