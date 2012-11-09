@@ -9,7 +9,7 @@ howto
 
 Run the server with (it will be available at http://localhost:8000 ):
      
-    gunicorn --debug --worker-class=gevent -t 999999  wafwfy:app
+    python wafwfy/manage.py runserver --threaded
 
 then run celery with:
      
