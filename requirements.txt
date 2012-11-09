@@ -27,7 +27,3 @@ blinker==1.2
 Flask-And-Redis==0.3.1
 
 requests==0.13.6
-
-# need to use some cool server for SSE
-gevent==0.13.8
-gunicorn==0.15.0
